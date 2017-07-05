@@ -2,7 +2,7 @@
 
 ### Background
 
-Pac-Man is a 1-player game where the player navigates 'Pac-Man' through a rectangular maze. The goal is to collect all the dots, known as Pac-Dots while also avoiding enemy ghosts. The player is given three 'lives', and on contact with the ghosts, the player loses a life. On loss of three lives - play is over and the game is restarted. Once the all dots are collected, the player wins.
+Pac-Man is a 1-player game where the player navigates 'Pac-Man' through a rectangular maze. The goal is to collect all the dots, known as Pac-Dots while also avoiding enemy ghosts. The player is given three 'lives', and on contact with the ghosts, the player loses a life. On loss of three lives - play is over and the game is restarted. Once the all dots are collected, the player can move onto the next more difficult level.
 
 ### Functionality & MVP
 
@@ -14,12 +14,12 @@ In this version of Pac-Man, users will be able to:
 
 In addition, this project will include:
 
-- [ ] An About modal describing the background and rules of the game
+- [ ] Instructions to play the game
 - [ ] A production README
 
 ### Wireframes
 
-This app will consist of a single screen with game board, instructions, and navigation links to my Github, LinkedIn, and personal website. Game controls will include start, pause, reset buttons, and the directional pad to control Pac-Man. The bottom player information panel will keep track of score, lives, and level.
+This app will consist of a single screen with game board, instructions, and navigation links to my Github, LinkedIn, and personal portfolio website. Game controls will include start, pause, reset buttons, and the directional pad to control Pac-Man. The bottom information panel will keep track of score, lives, and level.
 
 ![wireframes](/assets/wireframe.png)
 
@@ -31,14 +31,13 @@ This project will be implemented with the following technologies:
 - `p5.js` for maze and object rendering to browser.
 - `Webpack` for bundling files into single entry file.
 
-In addition to the entry file, there will be three scripts involved in this project:
+In addition to the entry file, there will be four scripts involved in this project:
 
 `grid.js`: this script will handle the grid rendering. Grid will involve rigid bodies, and Pac-Man will be able to exit on the left/right and enter on the opposite side.
 
-`game.js`: this script will handle the game logic involving game initialization, game completion, and score-keeping.
-Additionally, it will be used to keep track of Pac-Dot consumption logic, Pac-Dot count, Power Pellet consumption logic, and collision detection.
+`game.js`: this script will handle the game logic involving game initialization, game completion, and score-keeping. Additionally, it will be used to keep track of Pac-Dot consumption logic, Power Pellet consumption logic, and collision detection.
 
-`ghost.js`: this script involves the artificial intelligence for ghost's, as well as movement logic during 'power mode' (when Pac-Man consumes a Power Pellet). During normal play, the ghost's will move toward Pac-Man through checking the shortest distance to Pac-Man and taking that route. During 'power mode', the ghosts should move away from Pac-Man.
+`ghost.js`: this script involves the artificial intelligence for ghosts, as well as movement logic during 'power mode' (when Pac-Man consumes a Power Pellet). During normal play, the ghost's will move toward Pac-Man through checking the shortest distance to Pac-Man and taking that route. During 'power mode', the ghosts should move away from Pac-Man.
 
 `pacman.js`: this script will handle Pac-Man movements.
 
