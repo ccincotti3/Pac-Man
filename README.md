@@ -1,4 +1,4 @@
-## Pacman
+## Pac-Man
 
 ### Background
 
