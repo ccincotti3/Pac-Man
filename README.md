@@ -21,7 +21,7 @@ In addition, this project will include:
 
 This app will consist of a single screen with game board, instructions, and navigation links to my Github, LinkedIn, and personal website. Game controls will include start, pause, reset buttons, and the directional pad to control Pac-Man. The bottom player information panel will keep track of score, lives, and level.
 
-![wireframes](/docs/assets/wireframe.png)
+![wireframes](/assets/wireframe.png)
 
 ### Architecture and Technologies
 
