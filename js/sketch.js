@@ -56,6 +56,8 @@ export default function sketch(s) {
       powerStartTime = s.millis() / 1000
     }
 
+    
+
     for (let i = 0; i < grid.length; i++) {
       grid[i].draw(s.frameCount % 8, powerMode);
     }

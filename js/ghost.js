@@ -50,6 +50,8 @@ class Ghost {
       this.direction = [0, 0];
       this.moving = false;
       this.path = 'stop';
+    } else if(target && target.type === "PACMAN") {
+      return "PACMAN_HIT"
     }
 
     if (this.direction[0] === 1) {
