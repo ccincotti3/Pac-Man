@@ -32,6 +32,14 @@ class Tile {
         this.s.fill(255);
         this.s.noStroke();
         break;
+      case "POWER":
+        this.s.ellipseMode(this.s.CORNER);
+        this.s.noStroke();
+        this.s.fill('#FFFF00');
+        this.s.ellipse(this.x * this.DIMENSION + this.DIMENSION / 4,
+                        this.y * this.DIMENSION + this.DIMENSION / 4,
+                        this.DIMENSION / 2);
+
       default:
         this.s.stroke(0);
         break;
@@ -60,6 +68,12 @@ class Tile {
         break;
       case "6":
         return "CLYDE"
+        break;
+      case "7":
+        return "OPEN"
+        break;
+      case "8":
+        return "POWER"
         break;
       default:
         return "DEFAULT"

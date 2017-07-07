@@ -14,10 +14,10 @@ class Ghost {
     this.DIMENSION = 25;
   }
 
-  draw(frameCount) {
+  draw(frameCount, powerMode) {
     switch(this.type) {
       case "INKY":
-        this.s.image(this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(powerMode ? this.s.pinkyImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "PINKY":
         this.s.image(this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)

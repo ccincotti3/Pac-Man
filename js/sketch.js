@@ -15,6 +15,8 @@ export default function sketch(s) {
   let pacDy = 0;
   let time = 0;
   let score = 0;
+  let powerMode = false;
+  let powerStartTime = 0;
 
   s.preload = () => {
     gridText = gridMap()
@@ -33,22 +35,29 @@ export default function sketch(s) {
 
   s.draw = () => {
     s.background(51);
-    time =  ((s.millis() / 1000) % 20)
-
+    time = s.millis() / 1000
+    if (time - powerStartTime > 12) {
+      powerMode = false;
+    }
     pacman = pacman.movePacman(pacDx, pacDy, grid);
-    inky = inky.move(pacman.x, pacman.y, grid, time);
-    pinky = pinky.move(pacman.x, pacman.y, grid, time);
-    blinky = blinky.move(pacman.x, pacman.y, grid, time);
-    clyde = clyde.move(pacman.x, pacman.y, grid, time);
+
+    inky = inky.move(pacman.x, pacman.y, grid);
+    pinky = pinky.move(pacman.x, pacman.y, grid);
+    blinky = blinky.move(pacman.x, pacman.y, grid);
+    clyde = clyde.move(pacman.x, pacman.y, grid);
 
     let thisTile = grid[pacman.x + pacman.y * 21];
     if(thisTile && thisTile.type === "PELLET") {
-      thisTile.type = "OPEN"
-      score += 100
+      thisTile.type = "OPEN";
+      score += 100;
+    } else if(thisTile && thisTile.type === "POWER") {
+      thisTile.type = "OPEN";
+      powerMode = true;
+      powerStartTime = s.millis() / 1000
     }
 
     for (let i = 0; i < grid.length; i++) {
-      grid[i].draw(s.frameCount % 8);
+      grid[i].draw(s.frameCount % 8, powerMode);
     }
     s.text(`${score}`, 20, 576);
   }
