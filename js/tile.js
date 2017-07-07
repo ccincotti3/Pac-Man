@@ -37,6 +37,22 @@ class Tile {
         break;
     }
   }
+
+  static parseType(numType) {
+    switch (numType) {
+      case "0":
+        return "WALL"
+        break;
+      case "1":
+        return "PELLET"
+        break;
+      case "2":
+        return "PACMAN"
+        break;
+      default:
+        return "DEFAULT"
+    }
+  }
 }
 
 
