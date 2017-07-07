@@ -4,7 +4,7 @@ class Pacman {
     this.y = y;
     this.type = type;
     this.s = s;
-
+    this.direction = [0, 0];
 
     this.speed = 0.2;
     this.DIMENSION = 25;
@@ -32,19 +32,30 @@ class Pacman {
       }
   }
 
-  movePacman(direction, grid) {
-    if(grid[Math.ceil(this.x) + this.y * 21].type === "WALL") {
-      return this;
+  movePacman(dx, dy, grid) {
+    let newDirection = [dx, dy];
+    let target = grid[this.x + this.y * 21 + dx + dy * 21]
+    if(target && target.type === "WALL") {
+      this.direction = [0, 0]
+      this.moving = false;
     }
-    if (direction === 'right') {
+
+    if(target && this.moving && target.type !==("WALL")) {
+      this.direction = newDirection;
+    }
+
+    this.moving = true;
+    if (this.direction[0] === 1) {
       this.x = this.x + this.speed;
-    } else if (direction === 'left'){
+    } else if (this.direction[0] === -1){
       this.x = this.x - this.speed;
-    } else if(direction === 'up') {
+    } else if(this.direction[1] === 1) {
       this.y = this.y + this.speed;
-    } else if(direction === 'down') {
-      this.y = this.y - this.speed
+    } else if(this.direction[1] === -1) {
+      this.y = this.y - this.speed;
     }
+    this.x = Math.round(this.x * 10) / 10
+    this.y = Math.round(this.y * 10) / 10
     return this;
   }
 }

@@ -5,9 +5,9 @@ export default function sketch(s) {
   let grid = []
   let DIMENSION = 25;
   let gridText;
-  let canvas;
   let pacman;
-  let pacmanDirection = 'stop';
+  let pacDx = 0
+  let pacDy = 0;
 
   s.preload = () => {
     gridText = gridMap()
@@ -19,7 +19,7 @@ export default function sketch(s) {
 
   s.draw = () => {
     s.background(51);
-    pacman = pacman.movePacman(pacmanDirection, grid);
+    pacman = pacman.movePacman(pacDx, pacDy, grid);
     for (let i = 0; i < grid.length; i++) {
       grid[i].draw(s.frameCount % 8);
     }
@@ -27,9 +27,13 @@ export default function sketch(s) {
 
   s.keyPressed = () => {
     if(s.keyCode === s.RIGHT_ARROW) {
-      pacmanDirection = 'right'
+      [pacDx, pacDy] = [1, 0]
     } else if(s.keyCode === s.LEFT_ARROW) {
-      pacmanDirection = 'left'
+      [pacDx, pacDy] = [-1, 0]
+    } else if(s.keyCode === s.DOWN_ARROW) {
+      [pacDx, pacDy] = [0, 1]
+    } else if(s.keyCode === s.UP_ARROW) {
+      [pacDx, pacDy] = [0, -1]
     }
   }
 
