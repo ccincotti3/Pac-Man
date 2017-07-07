@@ -30,11 +30,18 @@ export default function sketch(s) {
   s.draw = () => {
     s.background(51);
     time =  ((s.millis() / 1000) % 20)
+
     pacman = pacman.movePacman(pacDx, pacDy, grid);
     inky = inky.move(pacman.x, pacman.y, grid, time);
     pinky = pinky.move(pacman.x, pacman.y, grid, time);
     blinky = blinky.move(pacman.x, pacman.y, grid, time);
     clyde = clyde.move(pacman.x, pacman.y, grid, time);
+
+    let thisTile = grid[pacman.x + pacman.y * 21];
+    if(thisTile && thisTile.type === "PELLET") {
+      thisTile.type = "OPEN"
+    }
+
     for (let i = 0; i < grid.length; i++) {
       grid[i].draw(s.frameCount % 8);
     }
