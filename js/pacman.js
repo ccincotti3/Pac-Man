@@ -49,16 +49,16 @@ class Pacman {
 
     if (this.direction[0] === 1) {
       this.x = this.x + this.speed;
-          this.moving = true;
+      this.moving = true;
     } else if (this.direction[0] === -1){
       this.x = this.x - this.speed;
-          this.moving = true;
+      this.moving = true;
     } else if(this.direction[1] === 1) {
       this.y = this.y + this.speed;
-          this.moving = true;
+      this.moving = true;
     } else if(this.direction[1] === -1) {
       this.y = this.y - this.speed;
-          this.moving = true;
+      this.moving = true;
     }
     this.x = Math.round(this.x * 10) / 10
     this.y = Math.round(this.y * 10) / 10
