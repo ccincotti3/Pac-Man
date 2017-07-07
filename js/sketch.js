@@ -6,7 +6,7 @@ export default function sketch(s) {
   let DIMENSION = 25;
   let gridText;
   let pacman;
-  let pacDx = 0
+  let pacDx = 0;
   let pacDy = 0;
 
   s.preload = () => {
