@@ -14,17 +14,21 @@ export default function sketch(s) {
   let pacDx = 0;
   let pacDy = 0;
   let time = 0;
+  let score = 0;
 
   s.preload = () => {
     gridText = gridMap()
   }
   s.setup = () => {
-    s.createCanvas(525, 525);
+    s.createCanvas(525, 600);
     grid = createGrid();
     s.inkyImage = s.loadImage('./assets/Inky.png');
     s.blinkyImage = s.loadImage('./assets/blinky.png');
     s.pinkyImage = s.loadImage('./assets/pinky.png');
     s.clydeImage = s.loadImage('./assets/clyde.png');
+
+    s.textFont("Helvetica");
+    s.textSize(48);
   }
 
   s.draw = () => {
@@ -40,11 +44,13 @@ export default function sketch(s) {
     let thisTile = grid[pacman.x + pacman.y * 21];
     if(thisTile && thisTile.type === "PELLET") {
       thisTile.type = "OPEN"
+      score += 100
     }
 
     for (let i = 0; i < grid.length; i++) {
       grid[i].draw(s.frameCount % 8);
     }
+    s.text(`${score}`, 20, 576);
   }
 
   s.keyPressed = () => {
