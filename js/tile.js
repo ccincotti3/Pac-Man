@@ -32,6 +32,8 @@ class Tile {
         this.s.fill(255);
         this.s.noStroke();
         break;
+      case "INKY":
+        this.s.image(this.s.inkyImage, 0, 0)
       default:
         this.s.stroke(0);
         break;
@@ -48,6 +50,9 @@ class Tile {
         break;
       case "2":
         return "PACMAN"
+        break;
+      case "3":
+        return "INKY"
         break;
       default:
         return "DEFAULT"

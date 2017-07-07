@@ -6,6 +6,7 @@ export default function sketch(s) {
   let DIMENSION = 25;
   let gridText;
   let pacman;
+  let inkyImage;
   let pacDx = 0;
   let pacDy = 0;
 
@@ -15,6 +16,7 @@ export default function sketch(s) {
   s.setup = () => {
     s.createCanvas(525, 525);
     grid = createGrid();
+    s.inkyImage = s.loadImage(('./assets/Inkyyghost.png'))
   }
 
   s.draw = () => {
