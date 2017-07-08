@@ -17,12 +17,15 @@ export default function sketch(s) {
   let score = 0;
   let powerMode = false;
   let powerStartTime = 0;
+  let hitter;
+  let canvasX = 525;
+  let canvasY = 600;
 
   s.preload = () => {
     gridText = gridMap()
   }
   s.setup = () => {
-    s.createCanvas(525, 600);
+    s.createCanvas(canvasX, canvasY);
     grid = createGrid();
     s.inkyImage = s.loadImage('./assets/Inky.png');
     s.blinkyImage = s.loadImage('./assets/blinky.png');
@@ -41,10 +44,10 @@ export default function sketch(s) {
     }
     pacman = pacman.movePacman(pacDx, pacDy, grid);
 
-    inky = inky.move(pacman.x, pacman.y, grid);
-    pinky = pinky.move(pacman.x, pacman.y, grid);
-    blinky = blinky.move(pacman.x, pacman.y, grid);
-    clyde = clyde.move(pacman.x, pacman.y, grid);
+    inky = inky.move(pacman.x, pacman.y, grid, time % 20);
+    pinky = pinky.move(pacman.x, pacman.y, grid, time % 20);
+    blinky = blinky.move(pacman.x, pacman.y, grid, time % 20);
+    clyde = clyde.move(pacman.x, pacman.y, grid, time % 20);
 
     let thisTile = grid[pacman.x + pacman.y * 21];
     if(thisTile && thisTile.type === "PELLET") {
@@ -56,7 +59,17 @@ export default function sketch(s) {
       powerStartTime = s.millis() / 1000
     }
 
-    
+    hitter = checkHit(inky, blinky, pinky, clyde);
+    if (powerMode && hitter) {
+      hitter.x = 11
+      hitter.y = 11
+      hitter.hit = false
+      hitter = null;
+    } else if (hitter) {
+      console.log("Game over")
+      hitter.hit = false
+      hitter = null;
+    }
 
     for (let i = 0; i < grid.length; i++) {
       grid[i].draw(s.frameCount % 8, powerMode);
@@ -109,6 +122,17 @@ export default function sketch(s) {
       }
     }
     return grid
+  }
+
+  const checkHit = (...args) => {
+    let hitter;
+    args.forEach(ghost => {
+      if(ghost.hit) {
+        hitter = ghost;
+      }
+    });
+
+    return hitter;
   }
 
 

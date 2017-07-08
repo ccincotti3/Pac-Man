@@ -12,9 +12,13 @@ class Ghost {
     this.begin = true;
     this.speed = 0.1;
     this.DIMENSION = 25;
+    this.hit = false;
+    this.powerMode = false;
   }
 
   draw(frameCount, powerMode) {
+    this.powerMode = powerMode
+
     switch(this.type) {
       case "INKY":
         this.s.image(powerMode ? this.s.pinkyImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
@@ -39,9 +43,27 @@ class Ghost {
       possibleDirections = [[1, 0], [-1, 0]]
     }
     let newDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
+    let dirSum = 10000;
+
+    let goToX = time < 15 ? pacX : this.cornerX;
+    let goToY = time < 15 ? pacY : this.cornerY;
+
+    if(!this.powerMode) {
+      possibleDirections.forEach(dir => {
+        let posSum;
+        posSum = Math.sqrt((this.x + dir[0] - goToX)**2 + (this.y + dir[1] - goToY)**2)
+        if(posSum < dirSum && this.moving != false) {
+          dirSum = posSum;
+          newDirection = dir;
+        }
+      });
+    }
 
     let target = grid[this.x + this.y * 21 + newDirection[0] + newDirection[1] * 21]
     let oldTarget = grid[this.x + this.y * 21 + this.direction[0] + this.direction[1] * 21]
+    if ((this.x === pacX || this.x + .1 === pacX || this.x - .1 === pacX)  && this.y === pacY) {
+      this.hit = true;
+    }
     if(target && target.type !== "WALL") {
       this.direction = newDirection
     } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {
@@ -50,8 +72,6 @@ class Ghost {
       this.direction = [0, 0];
       this.moving = false;
       this.path = 'stop';
-    } else if(target && target.type === "PACMAN") {
-      return "PACMAN_HIT"
     }
 
     if (this.direction[0] === 1) {
