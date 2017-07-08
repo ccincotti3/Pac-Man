@@ -21,16 +21,16 @@ class Ghost {
 
     switch(this.type) {
       case "INKY":
-        this.s.image(powerMode ? this.s.pinkyImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(powerMode ? this.s.powerGhostImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "PINKY":
-        this.s.image(this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(powerMode ? this.s.powerGhostImage : this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "BLINKY":
-        this.s.image(this.s.blinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(powerMode ? this.s.powerGhostImage : this.s.blinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "CLYDE":
-        this.s.image(this.s.clydeImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(powerMode ? this.s.powerGhostImage : this.s.clydeImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
     }
   }
@@ -61,7 +61,7 @@ class Ghost {
 
     let target = grid[this.x + this.y * 21 + newDirection[0] + newDirection[1] * 21]
     let oldTarget = grid[this.x + this.y * 21 + this.direction[0] + this.direction[1] * 21]
-    if ((this.x === pacX || this.x + .1 === pacX || this.x - .1 === pacX)  && this.y === pacY) {
+    if ((this.x <= pacX + .1 && this.x >= pacX - .1) && (this.y <= pacY + .1 && this.y >= pacY - .1 )) {
       this.hit = true;
     }
     if(target && target.type !== "WALL") {

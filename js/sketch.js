@@ -31,6 +31,7 @@ export default function sketch(s) {
     s.blinkyImage = s.loadImage('./assets/blinky.png');
     s.pinkyImage = s.loadImage('./assets/pinky.png');
     s.clydeImage = s.loadImage('./assets/clyde.png');
+    s.powerGhostImage = s.loadImage('./assets/powerghost.png');
 
     s.textFont("Helvetica");
     s.textSize(48);
