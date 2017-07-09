@@ -63,7 +63,6 @@ class Pacman {
 
     if (this.direction[0] === 1) {
       this.x = this.x + this.speed;
-      console.log(this.y)
       if (this.x === 27 && this.y === 14) {
         this.x = 0;
       }

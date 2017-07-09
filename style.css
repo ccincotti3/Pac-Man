@@ -1,0 +1,20 @@
+body{
+  background-color: black;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-container, .right-container {
+color: white;
+width: 300px;
+text-align: center;
+margin: 50px;
+}
+
+li {
+  text-align: left;
+  list-style: none;
+}

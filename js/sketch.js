@@ -26,7 +26,11 @@ export default function sketch(s) {
   let pause = false;
   let start = true;
   let won = false;
+  let loss = false;
   let pellets = 0
+  let nextLevel = false;
+  let startTime = 0;
+  let level = 0;
 
   s.preload = () => {
     s.inkyImage = s.loadImage('./assets/Inky.png');
@@ -39,20 +43,27 @@ export default function sketch(s) {
 
   }
   s.setup = () => {
-    lives = 3;
-    score = 0;
+    startTime = 0;
+    pause = false;
+    won = false;
+    loss = false;
     time = 0;
     powerStartTime = 0;
     characterIndex = [];
-    newGame = true;
-    pause = false;
-    start = true;
-    won = false;
     pellets = 0
     powerMode = false;
-
+    if(!nextLevel) {
+      start = true;
+      lives = 3;
+      score = 0;
+      newGame = true;
+      level = 0;
+    }
+    level++;
+    nextLevel = true;
     grid = []
-    s.createCanvas(canvasX, canvasY);
+    let canvas = s.createCanvas(canvasX, canvasY);
+    canvas.parent('center-container');
     gridText = gridMap();
     grid = createGrid();
     s.textFont(s.myFont);
@@ -67,23 +78,35 @@ export default function sketch(s) {
   };
 
   s.draw = () => {
+    s.textAlign(s.CENTER)
+    s.fill('#FFFF00');
     gameWon();
     if (start) {
       s.background(51);
-      for (let i = 0; i < grid.length; i++) {
-        grid[i].draw();
-      }
-      s.fill('#FFFF00');
-      s.text(`PRESS ENTER`, canvasX / 2, 250);
-      s.text(`TO PLAY`, canvasX / 2, 300);
-      s.textAlign(s.CENTER)
+      drawSplash();
+      s.textSize(80);
+      s.text(`PAC-MAN`, canvasX / 2, 250);
+      s.textSize(48);
+      s.text(`PRESS ENTER`, canvasX / 2, 350);
+      s.text(`TO PLAY`, canvasX / 2, 400);
     } else if(pause) {
       s.text(`PAUSE`, canvasX / 2, 250);
-    } else if(won) {
-      s.text(`YOU WIN!`, canvasX / 2, 250);
+    } else if(won || loss) {
+      let text = won ? 'YOU WIN!' : "YOU LOSE!"
+      let nextText = won ? 'NEXT LEVEL!' : 'NEW GAME!'
+      s.text(`${text}`, canvasX / 2, 250);
       s.text(`PRESS 'N'`, canvasX / 2, 300);
-      s.text(`FOR A`, canvasX / 2, 350);
-      s.text(`NEW GAME!`, canvasX / 2, 400);
+      s.text(`FOR`, canvasX / 2, 350);
+      s.text(`${nextText}`, canvasX / 2, 400);
+    } else if(nextLevel) {
+      startTime === 0 ? startTime = s.millis() / 1000: ''
+      time = s.millis() / 1000
+
+      if (time - startTime < 3) {
+        s.text(`LEVEL ${level}`, canvasX / 2, 300);
+      } else {
+        nextLevel = false;
+      }
     } else {
       playGame();
     }
@@ -195,7 +218,7 @@ export default function sketch(s) {
 
   const playGame =() => {
     s.background(51);
-    time = s.millis() / 1000
+    time = s.millis() / 1000;
     if (time - powerStartTime > 12) {
       flipPower(false, inky, pinky, blinky, clyde)
     }
@@ -211,7 +234,6 @@ export default function sketch(s) {
       thisTile.type = "OPEN";
       score += 100;
       pellets--;
-      console.log(pellets)
     } else if(thisTile && thisTile.type === "POWER") {
       thisTile.type = "OPEN";
       pellets--;
@@ -256,6 +278,18 @@ export default function sketch(s) {
   const gameWon = () => {
     if (pellets === 0) {
       won = true;
+      nextLevel = true;
+
+    } else if (lives === 0) {
+      loss = true;
+      nextLevel = false;
     }
+  }
+  const drawSplash = () => {
+    s.arc(100, 500, 80, 80, .25 * s.PI, 1.75 * s.PI, s.PIE)
+    s.image(s.inkyImage, 200, 460, 80, 80)
+    s.image(s.pinkyImage, 250, 460, 80, 80)
+    s.image(s.blinkyImage, 300, 460, 80, 80)
+    s.image(s.clydeImage, 350, 460, 80, 80)
   }
 }
