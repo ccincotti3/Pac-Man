@@ -61,7 +61,7 @@ class Ghost {
 
     let target = grid[this.x + this.y * 21 + newDirection[0] + newDirection[1] * 21]
     let oldTarget = grid[this.x + this.y * 21 + this.direction[0] + this.direction[1] * 21]
-    if ((this.x <= pacX + .1 && this.x >= pacX - .1) && (this.y <= pacY + .1 && this.y >= pacY - .1 )) {
+    if ((this.x <= pacX + .15 && this.x >= pacX - .15) && (this.y <= pacY + .15 && this.y >= pacY - .15 )) {
       this.hit = true;
     }
     if(target && target.type !== "WALL") {
