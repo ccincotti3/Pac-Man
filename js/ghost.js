@@ -16,26 +16,25 @@ class Ghost {
     this.powerMode = false;
   }
 
-  draw(frameCount, powerMode) {
-    this.powerMode = powerMode
+  draw(frameCount) {
 
     switch(this.type) {
       case "INKY":
-        this.s.image(powerMode ? this.s.powerGhostImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "PINKY":
-        this.s.image(powerMode ? this.s.powerGhostImage : this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "BLINKY":
-        this.s.image(powerMode ? this.s.powerGhostImage : this.s.blinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.blinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
       case "CLYDE":
-        this.s.image(powerMode ? this.s.powerGhostImage : this.s.clydeImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
+        this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.clydeImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION)
         break;
     }
   }
 
-  move(pacX, pacY, grid, time) {
+  move(pacX, pacY, grid, time, powerMode) {
     let possibleDirections = [[1, 0], [0, -1], [-1, 0], [0, 1]]
       if ([1, -1].includes(this.direction[0])) {
       possibleDirections = [[0, -1], [0, 1]]
@@ -45,33 +44,36 @@ class Ghost {
     let newDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
     let dirSum = 10000;
 
-    let goToX = time < 15 ? pacX : this.cornerX;
-    let goToY = time < 15 ? pacY : this.cornerY;
+    let goToX = time > 8 ? pacX : this.cornerX;
+    let goToY = time > 8 ? pacY : this.cornerY;
 
     if(!this.powerMode) {
       possibleDirections.forEach(dir => {
         let posSum;
         posSum = Math.sqrt((this.x + dir[0] - goToX)**2 + (this.y + dir[1] - goToY)**2)
-        if(posSum < dirSum && this.moving != false) {
+        if(posSum < dirSum && this.moving !== false) {
           dirSum = posSum;
           newDirection = dir;
         }
       });
     }
-
-    let target = grid[this.x + this.y * 28 + newDirection[0] + newDirection[1] * 28]
-    let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
     if ((this.x <= pacX + .15 && this.x >= pacX - .15) && (this.y <= pacY + .15 && this.y >= pacY - .15 )) {
       this.hit = true;
     }
-    if(target && target.type !== "WALL") {
-      this.direction = newDirection
-    } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {
-      this.direction
-    } else if(target && target.type === "WALL") {
-      this.direction = [0, 0];
-      this.moving = false;
-      this.path = 'stop';
+    if (this.x % 1 === 0 && this.y % 1 === 0){
+      let target = grid[this.x + this.y * 28 + newDirection[0] + newDirection[1] * 28]
+      let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
+
+      if(target && target.type !== "WALL") {
+        this.direction = newDirection
+      } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {
+        this.direction
+      } else if(target && target.type === "WALL") {
+        this.direction = [0, 0];
+        this.moving = false;
+        this.path = 'stop';
+      }
+
     }
 
     if (this.direction[0] === 1) {

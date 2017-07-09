@@ -19,12 +19,14 @@ export default function sketch(s) {
   let powerStartTime = 0;
   let hitter;
   let canvasX = 476;
-  let canvasY = 527;
+  let canvasY = 600;
   let lives = 3;
   let characterIndex = [];
   let newGame = true;
   let pause = false;
   let start = true;
+  let won = false;
+  let pellets = 0
 
   s.preload = () => {
     s.inkyImage = s.loadImage('./assets/Inky.png');
@@ -37,12 +39,27 @@ export default function sketch(s) {
 
   }
   s.setup = () => {
+    lives = 3;
+    score = 0;
+    time = 0;
+    powerStartTime = 0;
+    characterIndex = [];
+    newGame = true;
+    pause = false;
+    start = true;
+    won = false;
+    pellets = 0
+    powerMode = false;
+
+    grid = []
     s.createCanvas(canvasX, canvasY);
     gridText = gridMap();
     grid = createGrid();
     s.textFont(s.myFont);
     s.textSize(48);
     s.reset();
+
+
   }
 
   s.reset = () => {
@@ -50,19 +67,23 @@ export default function sketch(s) {
   };
 
   s.draw = () => {
-
-    if (pause) {
-      s.text(`PAUSE`, 265, 250);
-    } else if(start) {
+    gameWon();
+    if (start) {
       s.background(51);
       for (let i = 0; i < grid.length; i++) {
         grid[i].draw();
       }
       s.fill('#FFFF00');
-      s.text(`PRESS ENTER`, 260, 250);
-      s.text(`TO PLAY`, 260, 300);
+      s.text(`PRESS ENTER`, canvasX / 2, 250);
+      s.text(`TO PLAY`, canvasX / 2, 300);
       s.textAlign(s.CENTER)
-
+    } else if(pause) {
+      s.text(`PAUSE`, canvasX / 2, 250);
+    } else if(won) {
+      s.text(`YOU WIN!`, canvasX / 2, 250);
+      s.text(`PRESS 'N'`, canvasX / 2, 300);
+      s.text(`FOR A`, canvasX / 2, 350);
+      s.text(`NEW GAME!`, canvasX / 2, 400);
     } else {
       playGame();
     }
@@ -86,6 +107,8 @@ export default function sketch(s) {
   s.keyTyped = () => {
     if(s.key === 'p') {
       pause = !pause;
+    } else if(s.key === 'n') {
+      s.setup();
     }
   }
 
@@ -111,7 +134,7 @@ export default function sketch(s) {
               characterIndex.push(blinky.startingPoint)
               break;
             case "PINKY":
-              grid.push(new Ghost(s, j, i, type, 0, 441))
+              grid.push(new Ghost(s, j, i, type, 0, 400))
               pinky = grid[grid.length - 1]
               pinky.startingPoint = grid.length - 1;
               pinky.startingX = j;
@@ -119,7 +142,7 @@ export default function sketch(s) {
               characterIndex.push(pinky.startingPoint)
               break;
             case "INKY":
-              grid.push(new Ghost(s, j, i, type, 441, 441))
+              grid.push(new Ghost(s, j, i, type, 400, 400))
               inky = grid[grid.length - 1]
               inky.startingPoint = grid.length - 1
               inky.startingX = j;
@@ -127,7 +150,7 @@ export default function sketch(s) {
               characterIndex.push(inky.startingPoint)
               break;
             case "CLYDE":
-              grid.push(new Ghost(s, j, i, type, 441, 0))
+              grid.push(new Ghost(s, j, i, type, 400, 0))
               clyde = grid[grid.length - 1]
               clyde.startingPoint = grid.length - 1;
               clyde.startingX = j;
@@ -135,7 +158,10 @@ export default function sketch(s) {
               characterIndex.push(clyde.startingPoint)
               break;
           }
-        } else if ( newGame === true ){
+        } else if( type === "PELLET" || type === "POWER") {
+          grid.push(new Tile(s, j, i, type))
+          pellets++;
+        } else {
           grid.push(new Tile(s, j, i, type))
         }
       }
@@ -160,38 +186,50 @@ export default function sketch(s) {
     })
   }
 
+  const flipPower = (bool, ...args) => {
+    powerMode = bool
+    args.forEach(ghost => {
+      ghost.powerMode = bool
+    })
+  }
+
   const playGame =() => {
     s.background(51);
     time = s.millis() / 1000
     if (time - powerStartTime > 12) {
-      powerMode = false;
+      flipPower(false, inky, pinky, blinky, clyde)
     }
     pacman = pacman.movePacman(pacDx, pacDy, grid);
 
-    inky = inky.move(pacman.x, pacman.y, grid, time % 20);
-    pinky = pinky.move(pacman.x, pacman.y, grid, time % 20);
-    blinky = blinky.move(pacman.x, pacman.y, grid, time % 20);
-    clyde = clyde.move(pacman.x, pacman.y, grid, time % 20);
+    inky = inky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    pinky = pinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    blinky = blinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    clyde = clyde.move(pacman.x, pacman.y, grid, time % 20, powerMode);
 
     let thisTile = grid[pacman.x + pacman.y * 28];
     if(thisTile && thisTile.type === "PELLET") {
       thisTile.type = "OPEN";
       score += 100;
+      pellets--;
+      console.log(pellets)
     } else if(thisTile && thisTile.type === "POWER") {
       thisTile.type = "OPEN";
-      powerMode = true;
+      pellets--;
+      flipPower(true, inky, pinky, blinky, clyde)
       powerStartTime = s.millis() / 1000
     }
 
     hitter = checkHit(inky, blinky, pinky, clyde);
-    if (powerMode && hitter) {
-      hitter.x = 11
-      hitter.y = 11
+    if (powerMode && hitter && hitter.powerMode) {
+      hitter.x = hitter.startingX;
+      hitter.y = hitter.startingY;
+      hitter.powerMode = false;
       hitter.hit = false
       hitter = null;
     } else if (hitter) {
       hitter.hit = false
       hitter = null;
+      flipPower(false, inky, blinky, pinky, clyde);
       lives--;
       s.reset();
     }
@@ -208,10 +246,16 @@ export default function sketch(s) {
       grid[characterIndex[i]].draw(s.frameCount % 8, powerMode)
     }
 
-    s.text(`${score}`, 20, 576);
+    s.text(`${score}`, 100, 580);
     for (var i = 0; i < lives; i++) {
-      s.image(s.liveImage, (i * 30) + 225, 547, DIMENSION, DIMENSION)
+      s.image(s.liveImage, (i * 40) + 350, 550, 30, 30)
     }
 
+  }
+
+  const gameWon = () => {
+    if (pellets === 0) {
+      won = true;
+    }
   }
 }

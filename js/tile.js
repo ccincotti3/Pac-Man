@@ -12,8 +12,8 @@ class Tile {
   draw() {
     switch (this.type) {
       case "WALL":
-        this.s.stroke(0);
-        this.s.fill('#0000FF');
+        this.s.noStroke();
+        this.s.fill('#022866');
         this.s.rect(this.x * this.DIMENSION,
                     this.y * this.DIMENSION,
                     this.DIMENSION,
@@ -39,7 +39,16 @@ class Tile {
         this.s.ellipse(this.x * this.DIMENSION + this.DIMENSION / 4,
                         this.y * this.DIMENSION + this.DIMENSION / 4,
                         this.DIMENSION / 2);
-
+        break;
+      case "GATE":
+        this.s.noStroke();
+        this.s.fill('#FFFFFF');
+        this.s.rect(this.x * this.DIMENSION,
+                    this.y * this.DIMENSION,
+                    this.DIMENSION,
+                    this.DIMENSION / 3
+                  );
+        break;
       default:
         this.s.stroke(0);
         break;
@@ -74,6 +83,9 @@ class Tile {
         break;
       case "8":
         return "POWER"
+        break;
+      case "9":
+        return "GATE";
         break;
       default:
         return "DEFAULT"

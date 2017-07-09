@@ -27,16 +27,16 @@ class Pacman {
     this.s.fill('#FFFF00');
       if (frameCount <= 4) {
         this.s.arc(
-          this.x * this.DIMENSION,
-          this.y * this.DIMENSION,
+          this.x * this.DIMENSION + 2,
+          this.y * this.DIMENSION + 2,
           14, 14, (this.pacTopLip  - .0625 * frameCount) * this.s.PI,
           (this.pacBottomLip + (.0625 * frameCount)) * this.s.PI,
           this.s.PIE
         );
       } else {
         this.s.arc(
-          this.x * this.DIMENSION,
-          this.y * this.DIMENSION,
+          this.x * this.DIMENSION + 2,
+          this.y * this.DIMENSION + 2,
           14, 14, ((this.pacTopLip - .25) + .0625 * (frameCount % 4)) * this.s.PI,
           ((this.pacBottomLip + .25) - (.0625 * (frameCount % 4))) * this.s.PI,
           this.s.PIE
@@ -52,17 +52,21 @@ class Pacman {
 
     let target = grid[this.x + this.y * 28 + dx + dy * 28]
     let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
-    if(target && target.type !== "WALL") {
+    if(target && target.type !== "WALL" && target.type !== "GATE") {
       this.direction = newDirection
-    } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {
+    } else if (target && (target.type === "WALL" || target.type === "GATE") && (oldTarget.type !== "WALL" && oldTarget.type !== "GATE")) {
       this.direction
-    } else if(target && target.type === "WALL") {
+    } else if(target && (target.type === "WALL"  || target.type === "GATE")) {
       this.direction = [0, 0];
       this.moving = false;
     }
 
     if (this.direction[0] === 1) {
       this.x = this.x + this.speed;
+      console.log(this.y)
+      if (this.x === 27 && this.y === 14) {
+        this.x = 0;
+      }
       this.moving = true;
       this.pacBottomLip = 1.75;
       this.pacTopLip = .25
@@ -70,6 +74,9 @@ class Pacman {
       this.pacBottomLip = .70
       this.pacTopLip = 1.25
       this.x = this.x - this.speed;
+      if (this.x === 0 && this.y === 14) {
+        this.x = 27;
+      }
       this.moving = true;
     } else if(this.direction[1] === 1) {
       this.pacBottomLip = .25
