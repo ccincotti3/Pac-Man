@@ -11,7 +11,7 @@ class Ghost {
     this.moving = false;
     this.begin = true;
     this.speed = 0.1;
-    this.DIMENSION = 25;
+    this.DIMENSION = 17;
     this.hit = false;
     this.powerMode = false;
   }
@@ -59,8 +59,8 @@ class Ghost {
       });
     }
 
-    let target = grid[this.x + this.y * 21 + newDirection[0] + newDirection[1] * 21]
-    let oldTarget = grid[this.x + this.y * 21 + this.direction[0] + this.direction[1] * 21]
+    let target = grid[this.x + this.y * 28 + newDirection[0] + newDirection[1] * 28]
+    let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
     if ((this.x <= pacX + .15 && this.x >= pacX - .15) && (this.y <= pacY + .15 && this.y >= pacY - .15 )) {
       this.hit = true;
     }

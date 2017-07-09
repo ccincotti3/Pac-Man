@@ -4,7 +4,7 @@ import Pacman from './pacman';
 import Ghost from './ghost';
 export default function sketch(s) {
   let grid = []
-  let DIMENSION = 25;
+  let DIMENSION = 17;
   let gridText;
   let pacman;
   let inky;
@@ -18,8 +18,8 @@ export default function sketch(s) {
   let powerMode = false;
   let powerStartTime = 0;
   let hitter;
-  let canvasX = 525;
-  let canvasY = 600;
+  let canvasX = 476;
+  let canvasY = 527;
   let lives = 3;
   let characterIndex = [];
   let newGame = true;
@@ -173,7 +173,7 @@ export default function sketch(s) {
     blinky = blinky.move(pacman.x, pacman.y, grid, time % 20);
     clyde = clyde.move(pacman.x, pacman.y, grid, time % 20);
 
-    let thisTile = grid[pacman.x + pacman.y * 21];
+    let thisTile = grid[pacman.x + pacman.y * 28];
     if(thisTile && thisTile.type === "PELLET") {
       thisTile.type = "OPEN";
       score += 100;

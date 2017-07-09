@@ -9,7 +9,7 @@ class Pacman {
     this.pacTopLip = .25;
     this.pacBottomLip = 1.75;
     this.speed = 0.2;
-    this.DIMENSION = 25;
+    this.DIMENSION = 17;
   }
 
   draw(frameCount) {
@@ -27,17 +27,17 @@ class Pacman {
     this.s.fill('#FFFF00');
       if (frameCount <= 4) {
         this.s.arc(
-          this.x * this.DIMENSION + 3,
-          this.y * this.DIMENSION + 3,
-          20, 20, (this.pacTopLip  - .0625 * frameCount) * this.s.PI,
+          this.x * this.DIMENSION,
+          this.y * this.DIMENSION,
+          14, 14, (this.pacTopLip  - .0625 * frameCount) * this.s.PI,
           (this.pacBottomLip + (.0625 * frameCount)) * this.s.PI,
           this.s.PIE
         );
       } else {
         this.s.arc(
-          this.x * this.DIMENSION + 3,
-          this.y * this.DIMENSION + 3,
-          20, 20, ((this.pacTopLip - .25) + .0625 * (frameCount % 4)) * this.s.PI,
+          this.x * this.DIMENSION,
+          this.y * this.DIMENSION,
+          14, 14, ((this.pacTopLip - .25) + .0625 * (frameCount % 4)) * this.s.PI,
           ((this.pacBottomLip + .25) - (.0625 * (frameCount % 4))) * this.s.PI,
           this.s.PIE
         );
@@ -50,8 +50,8 @@ class Pacman {
   movePacman(dx, dy, grid) {
     let newDirection = [dx, dy];
 
-    let target = grid[this.x + this.y * 21 + dx + dy * 21]
-    let oldTarget = grid[this.x + this.y * 21 + this.direction[0] + this.direction[1] * 21]
+    let target = grid[this.x + this.y * 28 + dx + dy * 28]
+    let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
     if(target && target.type !== "WALL") {
       this.direction = newDirection
     } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {

@@ -6,7 +6,7 @@ class Tile {
     this.type = type;
     this.s = s;
 
-    this.DIMENSION = 25;
+    this.DIMENSION = 17;
   }
 
   draw() {
