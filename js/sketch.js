@@ -90,6 +90,7 @@ export default function sketch(s) {
       s.text(`PRESS ENTER`, canvasX / 2, 350);
       s.text(`TO PLAY`, canvasX / 2, 400);
     } else if(pause) {
+      s.clear();
       s.text(`PAUSE`, canvasX / 2, 250);
     } else if(won || loss) {
       let text = won ? 'YOU WIN!' : "YOU LOSE!"
@@ -99,6 +100,7 @@ export default function sketch(s) {
       s.text(`FOR`, canvasX / 2, 350);
       s.text(`${nextText}`, canvasX / 2, 400);
     } else if(nextLevel) {
+      s.clear();
       startTime === 0 ? startTime = s.millis() / 1000: ''
       time = s.millis() / 1000
 
