@@ -12,9 +12,21 @@ color: white;
 width: 300px;
 text-align: center;
 margin: 50px;
+font-family: 'Press Start 2P', cursive;
+}
+
+.left-container h1, .right-container h1 {
+  color: yellow;
+  font-size: 20px;
 }
 
 li {
+  margin-top: 10px;
   text-align: left;
   list-style: none;
+  font-size: 20px;
+}
+
+ul {
+  padding: 0;
 }
