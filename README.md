@@ -22,7 +22,12 @@ Similar to the original Pac-Man, the player can queue a change in direction that
 ```javascript
 let target = grid[this.x + this.y * 28 + dx + dy * 28]
 let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
-if(target && target.type !== "WALL" && target.type !== "GATE") {
+
+const wall = (type) => {
+   return ["WALL", "GATE"].includes(type);
+}
+
+if(target && (!wall(target.type)) {
   this.direction = newDirection
 } else if (target && (["WALL", "GATE"].includes(target.type)) && (!["WALL", "GATE"].includes(oldTarget.type))) {
   this.direction
