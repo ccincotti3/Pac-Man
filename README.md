@@ -29,9 +29,9 @@ const wall = (type) => {
 
 if(target && (!wall(target.type)) {
   this.direction = newDirection
-} else if (target && (["WALL", "GATE"].includes(target.type)) && (!["WALL", "GATE"].includes(oldTarget.type))) {
+} else if (target && wall(target.type) && !wall(oldTarget.type)) {
   this.direction
-} else if(target && (["WALL", "GATE"].includes(target.type))) {
+} else if(target && wall(target.type)) {
   this.direction = [0, 0];
 }
 ```
