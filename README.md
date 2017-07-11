@@ -39,9 +39,9 @@ if(target && (!wall(target.type)) {
 #### Ghost AI
 Staying true to the original Pac-Man, ghost movements involve chasing Pac-Man, visiting 'their' corner of the board, and random scattering during `Power Mode`.
 
-Both chasing and visiting mode involve calculating the shortest distance to Pac-Man and their corner respectively. Time is used to alternate between the two different modes. For 6 seconds, a ghost will be in visiting mode. After which, the ghost will enter chasing mode. This is repeated until the level is complete r the game is over.
+Both chasing and visiting mode involve calculating the shortest distance to Pac-Man and their corner respectively. Time is used to alternate between the two different modes. For 6 seconds, a ghost will be in visiting mode. After which, the ghost will enter chasing mode. This is repeated until the level is complete or the game is over.
 
-Random scattering only occurs during `Power Mode` which involves choosing a random possible path and moving in that direction.
+Random scattering only occurs during `Power Mode` which involves choosing a random possible path and moving in that direction. This lasts for 12 seconds.
 
 ```javascript
 let goToX = time > 6 ? pacX : this.cornerX;
