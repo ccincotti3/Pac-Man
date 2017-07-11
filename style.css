@@ -34,3 +34,14 @@ ul {
 strong {
   color: yellow;
 }
+
+a {
+  text-decoration: none;
+  color: white;
+  margin-top: 20px;
+  display: block;
+}
+a:hover {
+  cursor: pointer;
+  color: yellow;
+}
