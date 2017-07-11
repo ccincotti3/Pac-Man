@@ -20,11 +20,13 @@ All 2D rendering is done using the p5.js library, which is used to render object
 Similar to the original Pac-Man, the player can queue a change in direction that will fire once the move becomes possible (ie. not blocked by a barrier).
 
 ```javascript
+let target = grid[this.x + this.y * 28 + dx + dy * 28]
+let oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28]
 if(target && target.type !== "WALL" && target.type !== "GATE") {
   this.direction = newDirection
-} else if (target && (target.type === "WALL" || target.type === "GATE") && (oldTarget.type !== "WALL" && oldTarget.type !== "GATE")) {
+} else if (target && (["WALL", "GATE"].includes(target.type)) && (!["WALL", "GATE"].includes(oldTarget.type))) {
   this.direction
-} else if(target && (target.type === "WALL"  || target.type === "GATE")) {
+} else if(target && (["WALL", "GATE"].includes(target.type))) {
   this.direction = [0, 0];
 }
 ```

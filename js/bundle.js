@@ -35736,9 +35736,9 @@ var Pacman = function () {
       var oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28];
       if (target && target.type !== "WALL" && target.type !== "GATE") {
         this.direction = newDirection;
-      } else if (target && (target.type === "WALL" || target.type === "GATE") && oldTarget.type !== "WALL" && oldTarget.type !== "GATE") {
+      } else if (target && ["WALL", "GATE"].includes(target.type) && !["WALL", "GATE"].includes(oldTarget.type)) {
         this.direction;
-      } else if (target && (target.type === "WALL" || target.type === "GATE")) {
+      } else if (target && ["WALL", "GATE"].includes(target.type)) {
         this.direction = [0, 0];
       }
 
