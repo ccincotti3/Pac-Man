@@ -30,3 +30,7 @@ li {
 ul {
   padding: 0;
 }
+
+strong {
+  color: yellow;
+}
