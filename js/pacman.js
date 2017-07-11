@@ -5,7 +5,6 @@ class Pacman {
     this.type = type;
     this.s = s;
     this.direction = [1, 0];
-    this.moving = false;
     this.pacTopLip = .25;
     this.pacBottomLip = 1.75;
     this.speed = 0.2;
@@ -42,9 +41,6 @@ class Pacman {
           this.s.PIE
         );
       }
-
-    // right - .25 -> 0, 1.75 -> 2
-    // left - .75 -> 1, 1.25 -> 1
   }
 
   movePacman(dx, dy, grid) {
@@ -58,7 +54,6 @@ class Pacman {
       this.direction
     } else if(target && (target.type === "WALL"  || target.type === "GATE")) {
       this.direction = [0, 0];
-      this.moving = false;
     }
 
     if (this.direction[0] === 1) {
@@ -66,7 +61,6 @@ class Pacman {
       if (this.x === 27 && this.y === 14) {
         this.x = 0;
       }
-      this.moving = true;
       this.pacBottomLip = 1.75;
       this.pacTopLip = .25
     } else if (this.direction[0] === -1){
@@ -76,17 +70,14 @@ class Pacman {
       if (this.x === 0 && this.y === 14) {
         this.x = 27;
       }
-      this.moving = true;
     } else if(this.direction[1] === 1) {
       this.pacBottomLip = .25
       this.pacTopLip = .75
       this.y = this.y + this.speed;
-      this.moving = true;
     } else if(this.direction[1] === -1) {
       this.pacBottomLip = 1.20
       this.pacTopLip = 1.75
       this.y = this.y - this.speed;
-      this.moving = true;
     }
     this.x = Math.round(this.x * 10) / 10
     this.y = Math.round(this.y * 10) / 10

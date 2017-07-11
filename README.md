@@ -1,74 +1,53 @@
 ## Pac-Man
 
+[Play here](http://www.ccincotti3.github.io/Pac-Man/)
+
+![main](docs/pacman-play.png)
+
 ### Background
 
-Pac-Man is a 1-player game where the player navigates 'Pac-Man' through a rectangular maze. The goal is to collect all the dots, known as Pac-Dots while also avoiding enemy ghosts. The player is given three 'lives', and on contact with the ghosts, the player loses a life. On loss of three lives - play is over and the game is restarted. Once the all dots are collected, the player can move onto the next more difficult level.
+Pac-Man is a classic arcade game released by Namco in 1980. This version of the game was written in JavaScript and uses the p5.js library for 2D rendering.
 
-### Functionality & MVP
+### How to Play
 
-In this version of Pac-Man, users will be able to:
+Navigate Pac-Man by using the `directional pad`. Collect all the pellets, and use caution as enemy ghosts will attempt to stop you in your tracks! You can defend against ghosts by eating Power Pellets to enter `Power Mode` which are located on the four corners of the grid. Press `P` to pause the game.
 
-- [ ] Start, pause, and reset the game board
-- [ ] Roam the maze and collect Pac-Dots
-- [ ] Defend against enemy ghosts through consumption of Power Pellets
+### Features
 
-In addition, this project will include:
+#### 2D Rendering & Collision Detection
+All 2D rendering is done using the p5.js library, which is used to render objects in HTML Canvas. Since the `draw()` function is updated on every iteration, I used the always updating position of `Pac-Man` to determine if a collision was made against `Barriers`, `Pellets` or `Ghosts`.
 
-- [ ] Instructions to play the game
-- [ ] A production README
+Similar to the original Pac-Man, the player can queue a change in direction that will fire once the move becomes possible (ie. not blocked by a barrier).
 
-### Wireframes
+```javascript
+if(target && target.type !== "WALL" && target.type !== "GATE") {
+  this.direction = newDirection
+} else if (target && (target.type === "WALL" || target.type === "GATE") && (oldTarget.type !== "WALL" && oldTarget.type !== "GATE")) {
+  this.direction
+} else if(target && (target.type === "WALL"  || target.type === "GATE")) {
+  this.direction = [0, 0];
+}
+```
 
-This app will consist of a single screen with game board, instructions, and navigation links to my Github, LinkedIn, and personal portfolio website. Game controls will include start, pause, reset buttons, and the directional pad to control Pac-Man. The bottom information panel will keep track of score, lives, and level.
+#### Ghost AI
+Staying true to the original Pac-Man, ghost movements involve chasing Pac-Man, visiting 'their' corner of the board, and random scattering during `Power Mode`.
 
-![wireframes](/assets/wireframe.png)
+Both chasing and visiting mode involve calculating the shortest distance to Pac-Man and their corner respectively. Time is used to alternate between the two different modes. For 6 seconds, a ghost will be in visiting mode. After which, the ghost will enter chasing mode. This is repeated until the level is complete r the game is over.
 
-### Architecture and Technologies
+Random scattering only occurs during `Power Mode` which involves choosing a random possible path and moving in that direction.
 
-This project will be implemented with the following technologies:
+```javascript
+let goToX = time > 6 ? pacX : this.cornerX;
+let goToY = time > 6 ? pacY : this.cornerY;
 
-- `JavaScript` for game logic,
-- `p5.js` for maze and object rendering to browser.
-- `Webpack` for bundling files into single entry file.
-
-In addition to the entry file, there will be four scripts involved in this project:
-
-`grid.js`: this script will handle the grid rendering. Grid will involve rigid bodies, and Pac-Man will be able to exit on the left/right and enter on the opposite side.
-
-`game.js`: this script will handle the game logic involving game initialization, game completion, and score-keeping. Additionally, it will be used to keep track of Pac-Dot consumption logic, Power Pellet consumption logic, and collision detection.
-
-`ghost.js`: this script involves the artificial intelligence for ghosts, as well as movement logic during 'power mode' (when Pac-Man consumes a Power Pellet). During normal play, the ghost's will move toward Pac-Man through checking the shortest distance to Pac-Man and taking that route. During 'power mode', the ghosts should move away from Pac-Man.
-
-`pacman.js`: this script will handle Pac-Man movements.
-
-### Implementation Timeline
-
-**Day 1**: Setup all necessary Node modules, including getting webpack up and running. Write a basic entry file and the bare bones of all 4 scripts outlined above. Research the `p5.js` API. Goals for the day:
-
-- Use `p5.js` to objects to the browser.
-
-**Day 2**: Build out the grid and render to the browser. Connect Pac-Man and other objects to the grid. Work on Pac-Man and Ghost movement and collision detection.
-Implement initialization logic of Pac-Man and Ghosts.  Goals for the day:
-
-- Complete the `grid.js` using the `p5.js` library.
-- Render a grid to the browser.
-- Render Pac-Man and ghosts. Perform basic movements.
-- Complete collision detection logic.
-
-**Day 3**: Implement the game logic. Install the logic for game initialization and game completion. Complete Pac-Dot rendering and score-keeping. Add Power Pellet logic.  Goals for the day:
-
-- Render a functioning grid with moving Pac-Man and Ghosts.
-- Be able to move Pac-Man around the maze, lose lives, and collect Pac-Dots.
-- Score keeping works, and increases with collection of Pac-Dots and ghost consumption.
-
-
-**Day 4**: Polish off the styling of the game. Squash any bugs and continue implementing any bonus features.  Goals for the day:
-
-- Style the overall layout of the game. Include navigation links, player panel, and instructions.
-
-
-### Bonus features
-
-- [ ] Add foods like cherries that can be consumed to increase points.
-- [ ] Generate extra lives through reaching certain scores.
-- [ ] Implement multiplayer.
+if(!this.powerMode) {
+  possibleDirections.forEach(dir => {
+    let posSum;
+    posSum = Math.sqrt((this.x + dir[0] - goToX)**2 + (this.y + dir[1] - goToY)**2)
+    if(posSum < dirSum && this.moving !== false) {
+      dirSum = posSum;
+      newDirection = dir;
+    }
+  });
+}
+```
