@@ -2,6 +2,8 @@ import Tile from './tile';
 import gridMap from './grid_map';
 import Pacman from './pacman';
 import Ghost from './ghost';
+
+
 export default function sketch(s) {
   let grid = []
   let DIMENSION = 17;
@@ -40,7 +42,6 @@ export default function sketch(s) {
     s.powerGhostImage = s.loadImage('./assets/powerghost.png');
     s.liveImage = s.loadImage('./assets/pacman_live.png');
     s.myFont = s.loadFont('assets/joystix monospace.ttf');
-
   }
   s.setup = () => {
     startTime = 0;

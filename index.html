@@ -23,6 +23,17 @@
           <li><strong>Move:</strong> Directional Pad</li>
           <li><strong>Pause:</strong>'P'</li>
         </ul>
+          <input type="checkbox" id="music" onchange="myfunction(this.checked)"></input><label for="music">Music?</label>
+          <script>
+            var audio = new Audio('assets/september.mp3');
+            function myfunction(e){
+              if (e) {
+                audio.play();
+              } else {
+                audio.pause();
+              }
+            }
+          </script>
       </div>
       <div id="center-container"></div>
       <div class="right-container">
