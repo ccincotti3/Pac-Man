@@ -35285,6 +35285,8 @@ function sketch(s, music) {
   var nextLevel = false;
   var startTime = 0;
   var level = 0;
+  var text = void 0;
+  var username = void 0;
 
   s.preload = function () {
     s.inkyImage = s.loadImage('./assets/Inky.png');
@@ -35328,6 +35330,9 @@ function sketch(s, music) {
     grid = createGrid();
     s.textFont(s.myFont);
     s.textSize(48);
+    text = s.createInput("username");
+    text.parent('center-container');
+    text.position(138, 270);
     s.reset();
   };
 
@@ -35351,9 +35356,9 @@ function sketch(s, music) {
       s.clear();
       s.text('PAUSE', canvasX / 2, 250);
     } else if (won || loss) {
-      var text = won ? 'YOU WIN!' : "YOU LOSE!";
+      var _text = won ? 'YOU WIN!' : "YOU LOSE!";
       var nextText = won ? 'NEXT LEVEL!' : 'NEW GAME!';
-      s.text('' + text, canvasX / 2, 250);
+      s.text('' + _text, canvasX / 2, 250);
       s.text('PRESS \'N\'', canvasX / 2, 300);
       s.text('FOR', canvasX / 2, 350);
       s.text('' + nextText, canvasX / 2, 400);
@@ -35385,15 +35390,17 @@ function sketch(s, music) {
     } else if (s.keyCode === s.UP_ARROW) {
       pacDx = 0;
       pacDy = -1;
-    } else if (s.keyCode === s.ENTER) {
+    } else if (s.keyCode === s.ENTER && start) {
       start = false;
+      username = text.value();
+      text.hide();
     }
   };
 
   s.keyTyped = function () {
     if (s.key === 'p') {
       pause = !pause;
-    } else if (s.key === 'n') {
+    } else if (s.key === 'n' && !start) {
       s.setup();
     }
   };

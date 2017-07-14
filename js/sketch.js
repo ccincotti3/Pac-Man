@@ -33,6 +33,8 @@ export default function sketch(s, music) {
   let nextLevel = false;
   let startTime = 0;
   let level = 0;
+  let text;
+  let username;
 
   s.preload = () => {
     s.inkyImage = s.loadImage('./assets/Inky.png');
@@ -78,9 +80,10 @@ export default function sketch(s, music) {
     grid = createGrid();
     s.textFont(s.myFont);
     s.textSize(48);
+    text = s.createInput("username");
+    text.parent('center-container');
+    text.position(138, 270);
     s.reset();
-
-
   }
 
   s.reset = () => {
@@ -134,15 +137,17 @@ export default function sketch(s, music) {
       [pacDx, pacDy] = [0, 1]
     } else if(s.keyCode === s.UP_ARROW) {
       [pacDx, pacDy] = [0, -1]
-    } else if (s.keyCode === s.ENTER) {
+    } else if (s.keyCode === s.ENTER && start) {
       start = false;
+      username = text.value();
+      text.hide();
     }
   }
 
   s.keyTyped = () => {
     if(s.key === 'p') {
       pause = !pause;
-    } else if(s.key === 'n') {
+    } else if(s.key === 'n' && !start) {
       s.setup();
     }
   }
