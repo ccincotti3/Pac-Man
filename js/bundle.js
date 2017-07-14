@@ -35256,7 +35256,7 @@ var _ghost2 = _interopRequireDefault(_ghost);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function sketch(s) {
+function sketch(s, music) {
   var grid = [];
   var DIMENSION = 17;
   var gridText = void 0;
@@ -35294,6 +35294,13 @@ function sketch(s) {
     s.powerGhostImage = s.loadImage('./assets/powerghost.png');
     s.liveImage = s.loadImage('./assets/pacman_live.png');
     s.myFont = s.loadFont('assets/joystix monospace.ttf');
+    s.PacManEat = s.loadSound('assets/pacman_chomp.mp3');
+    s.eatGhost = s.loadSound('assets/pacman_eatghost.wav');
+    s.death = s.loadSound('assets/pacman_death.wav');
+    s.powerSound = s.loadSound('assets/power.mp3');
+    var musicCheckbox = $("#music").change(function () {
+      s.musicBool = musicCheckbox[0].checked;
+    });
   };
   s.setup = function () {
     startTime = 0;
@@ -35481,6 +35488,11 @@ function sketch(s) {
   };
 
   var playGame = function playGame() {
+    if (powerMode) {
+      if (!s.powerSound.isPlaying()) {
+        s.powerSound.play();
+      }
+    }
     s.background(51);
     time = s.millis() / 1000;
     if (time - powerStartTime > 12) {
@@ -35492,13 +35504,19 @@ function sketch(s) {
     pinky = pinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
     blinky = blinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
     clyde = clyde.move(pacman.x, pacman.y, grid, time % 20, powerMode);
-
+    var onATile = pacman.x % 1 === 0 & pacman.y % 1 === 0;
     var thisTile = grid[pacman.x + pacman.y * 28];
-    if (thisTile && thisTile.type === "PELLET") {
+    if (onATile && thisTile.type === "PELLET") {
       thisTile.type = "OPEN";
       score += 100;
+      if (s.musicBool) {
+        if (s.PacManEat.isPlaying()) {
+          s.PacManEat.stop();
+        }
+        s.PacManEat.play();
+      }
       pellets--;
-    } else if (thisTile && thisTile.type === "POWER") {
+    } else if (onATile && thisTile.type === "POWER") {
       thisTile.type = "OPEN";
       pellets--;
       flipPower(true, inky, pinky, blinky, clyde);
@@ -35507,12 +35525,22 @@ function sketch(s) {
 
     hitter = checkHit(inky, blinky, pinky, clyde);
     if (powerMode && hitter && hitter.powerMode) {
+      score += 500;
+      if (s.musicBool) {
+        if (s.eatGhost.isPlaying()) {
+          s.eatGhost.stop();
+        }
+        s.eatGhost.play();
+      }
       hitter.x = hitter.startingX;
       hitter.y = hitter.startingY;
       hitter.powerMode = false;
       hitter.hit = false;
       hitter = null;
     } else if (hitter) {
+      if (s.musicBool) {
+        s.death.play();
+      }
       hitter.hit = false;
       hitter = null;
       flipPower(false, inky, blinky, pinky, clyde);
@@ -35706,7 +35734,7 @@ var Pacman = function () {
     this.direction = [1, 0];
     this.pacTopLip = .25;
     this.pacBottomLip = 1.75;
-    this.speed = 0.2;
+    this.speed = 0.1;
     this.DIMENSION = 17;
   }
 
@@ -35742,13 +35770,14 @@ var Pacman = function () {
       var wall = function wall(type) {
         return ["WALL", "GATE"].includes(type);
       };
-
-      if (target && !wall(target.type)) {
-        this.direction = newDirection;
-      } else if (target && wall(target.type) && !wall(oldTarget.type)) {
-        this.direction;
-      } else if (target && wall(target.type)) {
-        this.direction = [0, 0];
+      if (this.x % 1 === 0 && this.y % 1 === 0) {
+        if (target && !wall(target.type)) {
+          this.direction = newDirection;
+        } else if (target && wall(target.type) && !wall(oldTarget.type)) {
+          this.direction;
+        } else if (target && wall(target.type)) {
+          this.direction = [0, 0];
+        }
       }
 
       if (this.direction[0] === 1) {
@@ -35853,8 +35882,8 @@ var Ghost = function () {
       var newDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
       var dirSum = 10000;
 
-      var goToX = time > 6 ? pacX : this.cornerX;
-      var goToY = time > 6 ? pacY : this.cornerY;
+      var goToX = time > 3 ? pacX : this.cornerX;
+      var goToY = time > 3 ? pacY : this.cornerY;
 
       if (!this.powerMode) {
         possibleDirections.forEach(function (dir) {

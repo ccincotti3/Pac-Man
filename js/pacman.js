@@ -7,7 +7,7 @@ class Pacman {
     this.direction = [1, 0];
     this.pacTopLip = .25;
     this.pacBottomLip = 1.75;
-    this.speed = 0.2;
+    this.speed = 0.1;
     this.DIMENSION = 17;
   }
 
@@ -52,14 +52,15 @@ class Pacman {
     const wall = (type) => {
        return ["WALL", "GATE"].includes(type);
     }
-
-    if(target && !wall(target.type)) {
-      this.direction = newDirection
-    } else if (target && wall(target.type) && !wall(oldTarget.type)) {
-      this.direction
-    } else if(target && wall(target.type)) {
-      this.direction = [0, 0];
-    }
+    if (this.x % 1 === 0 && this.y % 1 === 0){
+      if(target && !wall(target.type)) {
+        this.direction = newDirection
+      } else if (target && wall(target.type) && !wall(oldTarget.type)) {
+        this.direction
+      } else if(target && wall(target.type)) {
+        this.direction = [0, 0];
+      }
+  }
 
     if (this.direction[0] === 1) {
       this.x = this.x + this.speed;

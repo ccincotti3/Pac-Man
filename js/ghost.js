@@ -44,8 +44,8 @@ class Ghost {
     let newDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)]
     let dirSum = 10000;
 
-    let goToX = time > 6 ? pacX : this.cornerX;
-    let goToY = time > 6 ? pacY : this.cornerY;
+    let goToX = time > 3 ? pacX : this.cornerX;
+    let goToY = time > 3 ? pacY : this.cornerY;
 
     if(!this.powerMode) {
       possibleDirections.forEach(dir => {

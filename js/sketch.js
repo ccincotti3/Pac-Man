@@ -4,7 +4,7 @@ import Pacman from './pacman';
 import Ghost from './ghost';
 
 
-export default function sketch(s) {
+export default function sketch(s, music) {
   let grid = []
   let DIMENSION = 17;
   let gridText;
@@ -42,6 +42,15 @@ export default function sketch(s) {
     s.powerGhostImage = s.loadImage('./assets/powerghost.png');
     s.liveImage = s.loadImage('./assets/pacman_live.png');
     s.myFont = s.loadFont('assets/joystix monospace.ttf');
+    s.PacManEat = s.loadSound('assets/pacman_chomp.mp3');
+    s.eatGhost = s.loadSound('assets/pacman_eatghost.wav');
+    s.death = s.loadSound('assets/pacman_death.wav');
+    s.powerSound = s.loadSound('assets/power.mp3');
+    let musicCheckbox = $( "#music" ).change(
+    function(){
+      s.musicBool = musicCheckbox[0].checked
+    });
+
   }
   s.setup = () => {
     startTime = 0;
@@ -220,6 +229,11 @@ export default function sketch(s) {
   }
 
   const playGame =() => {
+    if (powerMode) {
+      if(!s.powerSound.isPlaying()) {
+        s.powerSound.play()
+      }
+    }
     s.background(51);
     time = s.millis() / 1000;
     if (time - powerStartTime > 12) {
@@ -231,13 +245,19 @@ export default function sketch(s) {
     pinky = pinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
     blinky = blinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
     clyde = clyde.move(pacman.x, pacman.y, grid, time % 20, powerMode);
-
+    let onATile = (pacman.x % 1 === 0 & pacman.y % 1 === 0)
     let thisTile = grid[pacman.x + pacman.y * 28];
-    if(thisTile && thisTile.type === "PELLET") {
+    if(onATile && thisTile.type === "PELLET") {
       thisTile.type = "OPEN";
       score += 100;
+      if(s.musicBool) {
+        if (s.PacManEat.isPlaying()) {
+          s.PacManEat.stop();
+        }
+        s.PacManEat.play()
+      }
       pellets--;
-    } else if(thisTile && thisTile.type === "POWER") {
+    } else if(onATile && thisTile.type === "POWER") {
       thisTile.type = "OPEN";
       pellets--;
       flipPower(true, inky, pinky, blinky, clyde)
@@ -246,12 +266,22 @@ export default function sketch(s) {
 
     hitter = checkHit(inky, blinky, pinky, clyde);
     if (powerMode && hitter && hitter.powerMode) {
+      score += 500;
+      if(s.musicBool) {
+        if (s.eatGhost.isPlaying()) {
+          s.eatGhost.stop();
+        }
+        s.eatGhost.play()
+      }
       hitter.x = hitter.startingX;
       hitter.y = hitter.startingY;
       hitter.powerMode = false;
       hitter.hit = false
       hitter = null;
     } else if (hitter) {
+      if(s.musicBool) {
+        s.death.play()
+      }
       hitter.hit = false
       hitter = null;
       flipPower(false, inky, blinky, pinky, clyde);
