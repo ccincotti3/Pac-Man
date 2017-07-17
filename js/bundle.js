@@ -47079,7 +47079,7 @@ function sketch(s, music) {
 
   var playGame = function playGame() {
     if (powerMode) {
-      if (!s.powerSound.isPlaying()) {
+      if (!s.powerSound.isPlaying() && s.musicBool) {
         s.powerSound.play();
       }
     }

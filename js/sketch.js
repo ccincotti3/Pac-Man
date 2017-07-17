@@ -262,7 +262,7 @@ export default function sketch(s, music) {
 
   const playGame =() => {
     if (powerMode) {
-      if(!s.powerSound.isPlaying()) {
+      if(!s.powerSound.isPlaying() && s.musicBool) {
         s.powerSound.play()
       }
     }
