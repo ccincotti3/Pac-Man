@@ -60,34 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _p = __webpack_require__(1);
-
-var _p2 = _interopRequireDefault(_p);
-
-__webpack_require__(8);
-
-__webpack_require__(9);
-
-var _sketch = __webpack_require__(3);
-
-var _sketch2 = _interopRequireDefault(_sketch);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-new _p2.default(_sketch2.default);
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {var require;var require;/*! p5.js v0.5.11 June 01, 2017 */
@@ -35200,6 +35177,29 @@ module.exports = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _p = __webpack_require__(0);
+
+var _p2 = _interopRequireDefault(_p);
+
+__webpack_require__(3);
+
+__webpack_require__(4);
+
+var _sketch = __webpack_require__(5);
+
+var _sketch2 = _interopRequireDefault(_sketch);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+new _p2.default(_sketch2.default);
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -35230,738 +35230,10 @@ module.exports = g;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = sketch;
-
-var _tile = __webpack_require__(4);
-
-var _tile2 = _interopRequireDefault(_tile);
-
-var _grid_map = __webpack_require__(5);
-
-var _grid_map2 = _interopRequireDefault(_grid_map);
-
-var _pacman = __webpack_require__(6);
-
-var _pacman2 = _interopRequireDefault(_pacman);
-
-var _ghost = __webpack_require__(7);
-
-var _ghost2 = _interopRequireDefault(_ghost);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function sketch(s, music) {
-  var grid = [];
-  var DIMENSION = 17;
-  var gridText = void 0;
-  var pacman = void 0;
-  var inky = void 0;
-  var clyde = void 0;
-  var pinky = void 0;
-  var blinky = void 0;
-  var pacDx = 0;
-  var pacDy = 0;
-  var time = 0;
-  var score = 0;
-  var powerMode = false;
-  var powerStartTime = 0;
-  var hitter = void 0;
-  var canvasX = 476;
-  var canvasY = 600;
-  var lives = 3;
-  var characterIndex = [];
-  var newGame = true;
-  var pause = false;
-  var start = true;
-  var won = false;
-  var loss = false;
-  var pellets = 0;
-  var nextLevel = false;
-  var startTime = 0;
-  var level = 0;
-  var text = void 0;
-  var username = void 0;
-
-  s.preload = function () {
-    s.inkyImage = s.loadImage('./assets/Inky.png');
-    s.blinkyImage = s.loadImage('./assets/blinky.png');
-    s.pinkyImage = s.loadImage('./assets/pinky.png');
-    s.clydeImage = s.loadImage('./assets/clyde.png');
-    s.powerGhostImage = s.loadImage('./assets/powerghost.png');
-    s.liveImage = s.loadImage('./assets/pacman_live.png');
-    s.myFont = s.loadFont('assets/joystix monospace.ttf');
-    s.PacManEat = s.loadSound('assets/pacman_chomp.mp3');
-    s.eatGhost = s.loadSound('assets/pacman_eatghost.wav');
-    s.death = s.loadSound('assets/pacman_death.wav');
-    s.powerSound = s.loadSound('assets/power.mp3');
-    var musicCheckbox = $("#music").change(function () {
-      s.musicBool = musicCheckbox[0].checked;
-    });
-  };
-  s.setup = function () {
-    startTime = 0;
-    pause = false;
-    won = false;
-    loss = false;
-    time = 0;
-    powerStartTime = 0;
-    characterIndex = [];
-    pellets = 0;
-    powerMode = false;
-    if (!nextLevel) {
-      start = true;
-      lives = 3;
-      score = 0;
-      newGame = true;
-      level = 0;
-    }
-    level++;
-    nextLevel = true;
-    grid = [];
-    var canvas = s.createCanvas(canvasX, canvasY);
-    canvas.parent('center-container');
-    gridText = (0, _grid_map2.default)();
-    grid = createGrid();
-    s.textFont(s.myFont);
-    s.textSize(48);
-    text = s.createInput("username");
-    text.parent('center-container');
-    text.position(138, 270);
-    s.reset();
-  };
-
-  s.reset = function () {
-    resetObjects();
-  };
-
-  s.draw = function () {
-    s.textAlign(s.CENTER);
-    s.fill('#FFFF00');
-    gameWon();
-    if (start) {
-      s.background(51);
-      drawSplash();
-      s.textSize(80);
-      s.text('PAC-MAN', canvasX / 2, 250);
-      s.textSize(48);
-      s.text('PRESS ENTER', canvasX / 2, 350);
-      s.text('TO PLAY', canvasX / 2, 400);
-    } else if (pause) {
-      s.clear();
-      s.text('PAUSE', canvasX / 2, 250);
-    } else if (won || loss) {
-      var _text = won ? 'YOU WIN!' : "YOU LOSE!";
-      var nextText = won ? 'NEXT LEVEL!' : 'NEW GAME!';
-      s.text('' + _text, canvasX / 2, 250);
-      s.text('PRESS \'N\'', canvasX / 2, 300);
-      s.text('FOR', canvasX / 2, 350);
-      s.text('' + nextText, canvasX / 2, 400);
-    } else if (nextLevel) {
-      s.clear();
-      startTime === 0 ? startTime = s.millis() / 1000 : '';
-      time = s.millis() / 1000;
-
-      if (time - startTime < 3) {
-        s.text('LEVEL ' + level, canvasX / 2, 300);
-      } else {
-        nextLevel = false;
-      }
-    } else {
-      playGame();
-    }
-  };
-
-  s.keyPressed = function () {
-    if (s.keyCode === s.RIGHT_ARROW) {
-      pacDx = 1;
-      pacDy = 0;
-    } else if (s.keyCode === s.LEFT_ARROW) {
-      pacDx = -1;
-      pacDy = 0;
-    } else if (s.keyCode === s.DOWN_ARROW) {
-      pacDx = 0;
-      pacDy = 1;
-    } else if (s.keyCode === s.UP_ARROW) {
-      pacDx = 0;
-      pacDy = -1;
-    } else if (s.keyCode === s.ENTER && start) {
-      start = false;
-      username = text.value();
-      text.hide();
-    }
-  };
-
-  s.keyTyped = function () {
-    if (s.key === 'p') {
-      pause = !pause;
-    } else if (s.key === 'n' && !start) {
-      s.setup();
-    }
-  };
-
-  var createGrid = function createGrid() {
-    for (var i = 0; i < gridText.length; i++) {
-      var row = gridText[i][0].split(" ");
-      for (var j = 0; j < row.length; j++) {
-        var type = _tile2.default.parseType(row[j]);
-        if (type === "PACMAN") {
-          grid.push(new _pacman2.default(s, j, i, type));
-          pacman = grid[grid.length - 1];
-          pacman.startingX = j;
-          pacman.startingY = i;
-          characterIndex.push(grid.length - 1);
-        } else if (["BLINKY", "PINKY", "INKY", "CLYDE"].includes(type)) {
-          switch (type) {
-            case "BLINKY":
-              grid.push(new _ghost2.default(s, j, i, type, 0, 0));
-              blinky = grid[grid.length - 1];
-              blinky.startingPoint = grid.length - 1;
-              blinky.startingX = j;
-              blinky.startingY = i;
-              characterIndex.push(blinky.startingPoint);
-              break;
-            case "PINKY":
-              grid.push(new _ghost2.default(s, j, i, type, 0, 400));
-              pinky = grid[grid.length - 1];
-              pinky.startingPoint = grid.length - 1;
-              pinky.startingX = j;
-              pinky.startingY = i;
-              characterIndex.push(pinky.startingPoint);
-              break;
-            case "INKY":
-              grid.push(new _ghost2.default(s, j, i, type, 400, 400));
-              inky = grid[grid.length - 1];
-              inky.startingPoint = grid.length - 1;
-              inky.startingX = j;
-              inky.startingY = i;
-              characterIndex.push(inky.startingPoint);
-              break;
-            case "CLYDE":
-              grid.push(new _ghost2.default(s, j, i, type, 400, 0));
-              clyde = grid[grid.length - 1];
-              clyde.startingPoint = grid.length - 1;
-              clyde.startingX = j;
-              clyde.startingY = i;
-              characterIndex.push(clyde.startingPoint);
-              break;
-          }
-        } else if (type === "PELLET" || type === "POWER") {
-          grid.push(new _tile2.default(s, j, i, type));
-          pellets++;
-        } else {
-          grid.push(new _tile2.default(s, j, i, type));
-        }
-      }
-    }
-    return grid;
-  };
-
-  var checkHit = function checkHit() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    var hitter = void 0;
-    args.forEach(function (ghost) {
-      if (ghost.hit) {
-        hitter = ghost;
-      }
-    });
-
-    return hitter;
-  };
-  var resetObjects = function resetObjects() {
-    [blinky, pinky, clyde, inky, pacman].forEach(function (char) {
-      char.x = char.startingX;
-      char.y = char.startingY;
-    });
-  };
-
-  var flipPower = function flipPower(bool) {
-    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-      args[_key2 - 1] = arguments[_key2];
-    }
-
-    powerMode = bool;
-    args.forEach(function (ghost) {
-      ghost.powerMode = bool;
-    });
-  };
-
-  var playGame = function playGame() {
-    if (powerMode) {
-      if (!s.powerSound.isPlaying()) {
-        s.powerSound.play();
-      }
-    }
-    s.background(51);
-    time = s.millis() / 1000;
-    if (time - powerStartTime > 12) {
-      flipPower(false, inky, pinky, blinky, clyde);
-    }
-    pacman = pacman.movePacman(pacDx, pacDy, grid);
-
-    inky = inky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
-    pinky = pinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
-    blinky = blinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
-    clyde = clyde.move(pacman.x, pacman.y, grid, time % 20, powerMode);
-    var onATile = pacman.x % 1 === 0 & pacman.y % 1 === 0;
-    var thisTile = grid[pacman.x + pacman.y * 28];
-    if (onATile && thisTile.type === "PELLET") {
-      thisTile.type = "OPEN";
-      score += 100;
-      if (s.musicBool) {
-        if (s.PacManEat.isPlaying()) {
-          s.PacManEat.stop();
-        }
-        s.PacManEat.play();
-      }
-      pellets--;
-    } else if (onATile && thisTile.type === "POWER") {
-      thisTile.type = "OPEN";
-      pellets--;
-      flipPower(true, inky, pinky, blinky, clyde);
-      powerStartTime = s.millis() / 1000;
-    }
-
-    hitter = checkHit(inky, blinky, pinky, clyde);
-    if (powerMode && hitter && hitter.powerMode) {
-      score += 500;
-      if (s.musicBool) {
-        if (s.eatGhost.isPlaying()) {
-          s.eatGhost.stop();
-        }
-        s.eatGhost.play();
-      }
-      hitter.x = hitter.startingX;
-      hitter.y = hitter.startingY;
-      hitter.powerMode = false;
-      hitter.hit = false;
-      hitter = null;
-    } else if (hitter) {
-      if (s.musicBool) {
-        s.death.play();
-      }
-      hitter.hit = false;
-      hitter = null;
-      flipPower(false, inky, blinky, pinky, clyde);
-      lives--;
-      s.reset();
-    }
-
-    for (var _i = 0; _i < grid.length; _i++) {
-      if (!characterIndex.includes(_i)) {
-        grid[_i].draw();
-      }
-    }
-
-    //draw characters last
-
-    for (var i = 0; i < characterIndex.length; i++) {
-      grid[characterIndex[i]].draw(s.frameCount % 8, powerMode);
-    }
-
-    s.text('' + score, 100, 580);
-    for (var i = 0; i < lives; i++) {
-      s.image(s.liveImage, i * 40 + 350, 550, 30, 30);
-    }
-  };
-
-  var gameWon = function gameWon() {
-    if (pellets === 0) {
-      won = true;
-      nextLevel = true;
-    } else if (lives === 0) {
-      loss = true;
-      nextLevel = false;
-    }
-  };
-  var drawSplash = function drawSplash() {
-    s.arc(100, 500, 80, 80, .25 * s.PI, 1.75 * s.PI, s.PIE);
-    s.image(s.inkyImage, 200, 460, 80, 80);
-    s.image(s.pinkyImage, 250, 460, 80, 80);
-    s.image(s.blinkyImage, 300, 460, 80, 80);
-    s.image(s.clydeImage, 350, 460, 80, 80);
-  };
-}
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Tile = function () {
-  function Tile(s, x, y, type) {
-    _classCallCheck(this, Tile);
-
-    this.x = x;
-    this.y = y;
-    this.type = type;
-    this.s = s;
-
-    this.DIMENSION = 17;
-  }
-
-  _createClass(Tile, [{
-    key: "draw",
-    value: function draw() {
-      switch (this.type) {
-        case "WALL":
-          this.s.noStroke();
-          this.s.fill('#022866');
-          this.s.rect(this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
-          break;
-        case "PELLET":
-          this.s.ellipseMode(this.s.CORNER);
-          this.s.noStroke();
-          this.s.fill(255);
-          this.s.ellipse(this.x * this.DIMENSION + this.DIMENSION / 3, this.y * this.DIMENSION + this.DIMENSION / 3, this.DIMENSION / 3);
-          break;
-        case "OPEN":
-          this.s.fill(255);
-          this.s.noStroke();
-          break;
-        case "POWER":
-          this.s.ellipseMode(this.s.CORNER);
-          this.s.noStroke();
-          this.s.fill('#FFFF00');
-          this.s.ellipse(this.x * this.DIMENSION + this.DIMENSION / 4, this.y * this.DIMENSION + this.DIMENSION / 4, this.DIMENSION / 2);
-          break;
-        case "GATE":
-          this.s.noStroke();
-          this.s.fill('#FFFFFF');
-          this.s.rect(this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION / 3);
-          break;
-        default:
-          this.s.stroke(0);
-          break;
-      }
-    }
-  }], [{
-    key: "parseType",
-    value: function parseType(numType) {
-      switch (numType) {
-        case "0":
-          return "WALL";
-          break;
-        case "1":
-          return "PELLET";
-          break;
-        case "2":
-          return "PACMAN";
-          break;
-        case "3":
-          return "INKY";
-          break;
-        case "4":
-          return "BLINKY";
-          break;
-        case "5":
-          return "PINKY";
-          break;
-        case "6":
-          return "CLYDE";
-          break;
-        case "7":
-          return "OPEN";
-          break;
-        case "8":
-          return "POWER";
-          break;
-        case "9":
-          return "GATE";
-          break;
-        default:
-          return "DEFAULT";
-      }
-    }
-  }]);
-
-  return Tile;
-}();
-
-exports.default = Tile;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = gridMap;
-function gridMap() {
-  var GRID_MAP = [['0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 8 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 8 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 1 0'], ['0 1 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 1 0'], ['0 1 1 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 1 1 0'], ['0 0 0 0 0 0 1 0 0 0 0 0 7 0 0 7 0 0 0 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 0 0 0 7 0 0 7 0 0 0 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 7 7 7 7 7 7 7 7 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 9 9 9 9 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 3 4 5 6 0 0 7 0 0 1 0 0 0 0 0 0'], ['7 7 7 7 7 7 1 7 7 7 0 0 0 0 0 0 0 0 7 7 7 1 7 7 7 7 7 7'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 8 1 1 0 0 1 1 1 1 1 1 1 7 2 1 1 1 1 1 1 1 0 0 1 1 8 0'], ['0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0'], ['0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0'], ['0 1 1 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0'], ['0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0']];
-
-  return GRID_MAP;
-}
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Pacman = function () {
-  function Pacman(s, x, y, type) {
-    _classCallCheck(this, Pacman);
-
-    this.x = x;
-    this.y = y;
-    this.type = type;
-    this.s = s;
-    this.direction = [1, 0];
-    this.pacTopLip = .25;
-    this.pacBottomLip = 1.75;
-    this.speed = 0.1;
-    this.DIMENSION = 17;
-  }
-
-  _createClass(Pacman, [{
-    key: "draw",
-    value: function draw(frameCount) {
-      var pacBottomLip = void 0;
-      var pacTopLip = void 0;
-
-      if (this.direction[0] === 1) {
-        pacBottomLip = 1.75;
-        pacTopLip = .25;
-      } else if (this.direction[0] === -1) {
-        pacBottomLip = .70;
-        pacTopLip = 1.25;
-      }
-      this.s.noStroke();
-      this.s.fill('#FFFF00');
-      if (frameCount <= 4) {
-        this.s.arc(this.x * this.DIMENSION + 2, this.y * this.DIMENSION + 2, 14, 14, (this.pacTopLip - .0625 * frameCount) * this.s.PI, (this.pacBottomLip + .0625 * frameCount) * this.s.PI, this.s.PIE);
-      } else {
-        this.s.arc(this.x * this.DIMENSION + 2, this.y * this.DIMENSION + 2, 14, 14, (this.pacTopLip - .25 + .0625 * (frameCount % 4)) * this.s.PI, (this.pacBottomLip + .25 - .0625 * (frameCount % 4)) * this.s.PI, this.s.PIE);
-      }
-    }
-  }, {
-    key: "movePacman",
-    value: function movePacman(dx, dy, grid) {
-      var newDirection = [dx, dy];
-
-      var target = grid[this.x + this.y * 28 + dx + dy * 28];
-      var oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28];
-
-      var wall = function wall(type) {
-        return ["WALL", "GATE"].includes(type);
-      };
-      if (this.x % 1 === 0 && this.y % 1 === 0) {
-        if (target && !wall(target.type)) {
-          this.direction = newDirection;
-        } else if (target && wall(target.type) && !wall(oldTarget.type)) {
-          this.direction;
-        } else if (target && wall(target.type)) {
-          this.direction = [0, 0];
-        }
-      }
-
-      if (this.direction[0] === 1) {
-        this.x = this.x + this.speed;
-        if (this.x === 27 && this.y === 14) {
-          this.x = 0;
-        }
-        this.pacBottomLip = 1.75;
-        this.pacTopLip = .25;
-      } else if (this.direction[0] === -1) {
-        this.pacBottomLip = .70;
-        this.pacTopLip = 1.25;
-        this.x = this.x - this.speed;
-        if (this.x === 0 && this.y === 14) {
-          this.x = 27;
-        }
-      } else if (this.direction[1] === 1) {
-        this.pacBottomLip = .25;
-        this.pacTopLip = .75;
-        this.y = this.y + this.speed;
-      } else if (this.direction[1] === -1) {
-        this.pacBottomLip = 1.20;
-        this.pacTopLip = 1.75;
-        this.y = this.y - this.speed;
-      }
-      this.x = Math.round(this.x * 10) / 10;
-      this.y = Math.round(this.y * 10) / 10;
-      return this;
-    }
-  }]);
-
-  return Pacman;
-}();
-
-exports.default = Pacman;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Ghost = function () {
-  function Ghost(s, x, y, type, cornerX, cornerY) {
-    _classCallCheck(this, Ghost);
-
-    this.x = x;
-    this.y = y;
-    this.type = type;
-    this.s = s;
-    this.path;
-    this.cornerX = cornerX;
-    this.cornerY = cornerY;
-    this.direction = [1, 0];
-    this.moving = false;
-    this.begin = true;
-    this.speed = 0.1;
-    this.DIMENSION = 17;
-    this.hit = false;
-    this.powerMode = false;
-  }
-
-  _createClass(Ghost, [{
-    key: "draw",
-    value: function draw(frameCount) {
-
-      switch (this.type) {
-        case "INKY":
-          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
-          break;
-        case "PINKY":
-          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
-          break;
-        case "BLINKY":
-          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.blinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
-          break;
-        case "CLYDE":
-          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.clydeImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
-          break;
-      }
-    }
-  }, {
-    key: "move",
-    value: function move(pacX, pacY, grid, time, powerMode) {
-      var _this = this;
-
-      var possibleDirections = [[1, 0], [0, -1], [-1, 0], [0, 1]];
-      if ([1, -1].includes(this.direction[0])) {
-        possibleDirections = [[0, -1], [0, 1]];
-      } else if ([1, -1].includes(this.direction[1])) {
-        possibleDirections = [[1, 0], [-1, 0]];
-      }
-      var newDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
-      var dirSum = 10000;
-
-      var goToX = time > 3 ? pacX : this.cornerX;
-      var goToY = time > 3 ? pacY : this.cornerY;
-
-      if (!this.powerMode) {
-        possibleDirections.forEach(function (dir) {
-          var posSum = void 0;
-          posSum = Math.sqrt((_this.x + dir[0] - goToX) ** 2 + (_this.y + dir[1] - goToY) ** 2);
-          if (posSum < dirSum && _this.moving !== false) {
-            dirSum = posSum;
-            newDirection = dir;
-          }
-        });
-      }
-      if (this.x <= pacX + .15 && this.x >= pacX - .15 && this.y <= pacY + .15 && this.y >= pacY - .15) {
-        this.hit = true;
-      }
-      if (this.x % 1 === 0 && this.y % 1 === 0) {
-        var target = grid[this.x + this.y * 28 + newDirection[0] + newDirection[1] * 28];
-        var oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28];
-
-        if (target && target.type !== "WALL") {
-          this.direction = newDirection;
-        } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {
-          this.direction;
-        } else if (target && target.type === "WALL") {
-          this.direction = [0, 0];
-          this.moving = false;
-          this.path = 'stop';
-        }
-      }
-
-      if (this.direction[0] === 1) {
-        if (this.x === 27 && this.y === 14) {
-          this.x = 0;
-        }
-        this.path = 'right';
-        this.x = this.x + this.speed;
-        this.moving = true;
-      } else if (this.direction[0] === -1) {
-        this.path = 'left';
-        this.x = this.x - this.speed;
-        if (this.x === 0 && this.y === 14) {
-          this.x = 27;
-        }
-        this.moving = true;
-      } else if (this.direction[1] === 1) {
-        this.y = this.y + this.speed;
-        this.moving = true;
-        this.path = 'up';
-      } else if (this.direction[1] === -1) {
-        this.y = this.y - this.speed;
-        this.moving = true;
-        this.path = 'down';
-      }
-      this.x = Math.round(this.x * 10) / 10;
-      this.y = Math.round(this.y * 10) / 10;
-      return this;
-    }
-  }]);
-
-  return Ghost;
-}();
-
-exports.default = Ghost;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! p5.sound.js v0.3.2 2016-11-01 */
 (function (root, factory) {
   if (true)
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1)], __WEBPACK_AMD_DEFINE_RESULT__ = function (p5) { (factory(p5));}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_RESULT__ = function (p5) { (factory(p5));}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   else if (typeof exports === 'object')
     factory(require('../p5'));
@@ -45298,7 +44570,7 @@ src_app = function () {
 
 
 /***/ }),
-/* 9 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! p5.dom.js v0.3.3 May 10, 2017 */
@@ -45330,7 +44602,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! p5.dom.js v0
 
 (function (root, factory) {
   if (true)
-    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1)], __WEBPACK_AMD_DEFINE_RESULT__ = function (p5) { (factory(p5));}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(0)], __WEBPACK_AMD_DEFINE_RESULT__ = function (p5) { (factory(p5));}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
   else if (typeof exports === 'object')
     factory(require('../p5'));
@@ -47510,6 +46782,760 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! p5.dom.js v0
 
 }));
 
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = sketch;
+
+var _tile = __webpack_require__(6);
+
+var _tile2 = _interopRequireDefault(_tile);
+
+var _grid_map = __webpack_require__(7);
+
+var _grid_map2 = _interopRequireDefault(_grid_map);
+
+var _pacman = __webpack_require__(8);
+
+var _pacman2 = _interopRequireDefault(_pacman);
+
+var _ghost = __webpack_require__(9);
+
+var _ghost2 = _interopRequireDefault(_ghost);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function sketch(s, music) {
+  var grid = [];
+  var DIMENSION = 17;
+  var gridText = void 0;
+  var pacman = void 0;
+  var inky = void 0;
+  var clyde = void 0;
+  var pinky = void 0;
+  var blinky = void 0;
+  var pacDx = 0;
+  var pacDy = 0;
+  var time = 0;
+  var score = 0;
+  var powerMode = false;
+  var powerStartTime = 0;
+  var hitter = void 0;
+  var canvasX = 476;
+  var canvasY = 600;
+  var lives = 3;
+  var characterIndex = [];
+  var newGame = true;
+  var pause = false;
+  var start = true;
+  var won = false;
+  var loss = false;
+  var pellets = 0;
+  var nextLevel = false;
+  var startTime = 0;
+  var level = 0;
+  var text = void 0;
+  var username = void 0;
+  var database = firebase.database().ref("scores");
+  var writeToDatabase = false;
+  var scoreBoard = [];
+
+  s.preload = function () {
+    s.inkyImage = s.loadImage('./assets/Inky.png');
+    s.blinkyImage = s.loadImage('./assets/blinky.png');
+    s.pinkyImage = s.loadImage('./assets/pinky.png');
+    s.clydeImage = s.loadImage('./assets/clyde.png');
+    s.powerGhostImage = s.loadImage('./assets/powerghost.png');
+    s.liveImage = s.loadImage('./assets/pacman_live.png');
+    s.myFont = s.loadFont('assets/joystix monospace.ttf');
+    s.PacManEat = s.loadSound('assets/pacman_chomp.mp3');
+    s.eatGhost = s.loadSound('assets/pacman_eatghost.wav');
+    s.death = s.loadSound('assets/pacman_death.wav');
+    s.powerSound = s.loadSound('assets/power.mp3');
+    var musicCheckbox = $("#music").change(function () {
+      s.musicBool = musicCheckbox[0].checked;
+    });
+  };
+  s.setup = function () {
+    startTime = 0;
+    pause = false;
+    won = false;
+    loss = false;
+    time = 0;
+    powerStartTime = 0;
+    characterIndex = [];
+    pellets = 0;
+    powerMode = false;
+    if (!nextLevel) {
+      start = true;
+      lives = 3;
+      score = 0;
+      newGame = true;
+      level = 0;
+    }
+    level++;
+    nextLevel = true;
+    grid = [];
+    var canvas = s.createCanvas(canvasX, canvasY);
+    canvas.parent('center-container');
+    gridText = (0, _grid_map2.default)();
+    grid = createGrid();
+    s.textFont(s.myFont);
+    s.textSize(48);
+    if (start) {
+      text = s.createInput("username");
+      text.parent('center-container');
+      text.position(138, 270);
+      scoreBoard = [];
+      database.orderByChild("score").limitToLast(5).once("value", function (snapshot) {
+        snapshot.forEach(function (snap) {
+          scoreBoard.push([snap.val().username, snap.val().score]);
+        });
+        scoreBoard = scoreBoard.reverse();
+      });
+    }
+    writeToDatabase = false;
+    s.reset();
+  };
+
+  s.reset = function () {
+    resetObjects();
+  };
+
+  s.draw = function () {
+    s.textAlign(s.CENTER);
+    s.fill('#FFFF00');
+    gameWon();
+    if (start) {
+      s.background(51);
+      drawSplash();
+      s.textSize(80);
+      s.text('PAC-MAN', canvasX / 2, 250);
+      s.textSize(48);
+      s.text('PRESS ENTER', canvasX / 2, 350);
+      s.text('TO PLAY', canvasX / 2, 400);
+    } else if (pause) {
+      s.clear();
+      s.textSize(48);
+      s.text('PAUSE', canvasX / 2, 250);
+      for (var i = 0; i < scoreBoard.length; i++) {
+        s.textSize(16);
+        s.text(scoreBoard[i][0] + ': ' + scoreBoard[i][1], canvasX / 2, i * 20 + 300);
+      }
+    } else if (won || loss) {
+      s.textSize(48);
+      var _text = won ? 'YOU WIN!' : "YOU LOSE!";
+      var nextText = won ? 'NEXT LEVEL!' : 'NEW GAME!';
+      s.text('' + _text, canvasX / 2, 250);
+      s.text('PRESS \'N\'', canvasX / 2, 300);
+      s.text('FOR', canvasX / 2, 350);
+      s.text('' + nextText, canvasX / 2, 400);
+      if (loss && !writeToDatabase) {
+        database.push({
+          username: username, score: score
+        });
+        writeToDatabase = true;
+      }
+    } else if (nextLevel) {
+      s.textSize(48);
+      s.clear();
+      startTime === 0 ? startTime = s.millis() / 1000 : '';
+      time = s.millis() / 1000;
+
+      if (time - startTime < 3) {
+        s.text('LEVEL ' + level, canvasX / 2, 300);
+      } else {
+        nextLevel = false;
+      }
+    } else {
+      playGame();
+    }
+  };
+
+  s.keyPressed = function () {
+    if (s.keyCode === s.RIGHT_ARROW) {
+      pacDx = 1;
+      pacDy = 0;
+    } else if (s.keyCode === s.LEFT_ARROW) {
+      pacDx = -1;
+      pacDy = 0;
+    } else if (s.keyCode === s.DOWN_ARROW) {
+      pacDx = 0;
+      pacDy = 1;
+    } else if (s.keyCode === s.UP_ARROW) {
+      pacDx = 0;
+      pacDy = -1;
+    } else if (s.keyCode === s.ENTER && start) {
+      start = false;
+      username = text.value();
+      text.hide();
+    }
+  };
+
+  s.keyTyped = function () {
+    if (s.key === 'p') {
+      pause = !pause;
+    } else if (s.key === 'n' && !start) {
+      s.setup();
+    }
+  };
+
+  var createGrid = function createGrid() {
+    for (var i = 0; i < gridText.length; i++) {
+      var row = gridText[i][0].split(" ");
+      for (var j = 0; j < row.length; j++) {
+        var type = _tile2.default.parseType(row[j]);
+        if (type === "PACMAN") {
+          grid.push(new _pacman2.default(s, j, i, type));
+          pacman = grid[grid.length - 1];
+          pacman.startingX = j;
+          pacman.startingY = i;
+          characterIndex.push(grid.length - 1);
+        } else if (["BLINKY", "PINKY", "INKY", "CLYDE"].includes(type)) {
+          switch (type) {
+            case "BLINKY":
+              grid.push(new _ghost2.default(s, j, i, type, 0, 0));
+              blinky = grid[grid.length - 1];
+              blinky.startingPoint = grid.length - 1;
+              blinky.startingX = j;
+              blinky.startingY = i;
+              characterIndex.push(blinky.startingPoint);
+              break;
+            case "PINKY":
+              grid.push(new _ghost2.default(s, j, i, type, 0, 400));
+              pinky = grid[grid.length - 1];
+              pinky.startingPoint = grid.length - 1;
+              pinky.startingX = j;
+              pinky.startingY = i;
+              characterIndex.push(pinky.startingPoint);
+              break;
+            case "INKY":
+              grid.push(new _ghost2.default(s, j, i, type, 400, 400));
+              inky = grid[grid.length - 1];
+              inky.startingPoint = grid.length - 1;
+              inky.startingX = j;
+              inky.startingY = i;
+              characterIndex.push(inky.startingPoint);
+              break;
+            case "CLYDE":
+              grid.push(new _ghost2.default(s, j, i, type, 400, 0));
+              clyde = grid[grid.length - 1];
+              clyde.startingPoint = grid.length - 1;
+              clyde.startingX = j;
+              clyde.startingY = i;
+              characterIndex.push(clyde.startingPoint);
+              break;
+          }
+        } else if (type === "PELLET" || type === "POWER") {
+          grid.push(new _tile2.default(s, j, i, type));
+          pellets++;
+        } else {
+          grid.push(new _tile2.default(s, j, i, type));
+        }
+      }
+    }
+    return grid;
+  };
+
+  var checkHit = function checkHit() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var hitter = void 0;
+    args.forEach(function (ghost) {
+      if (ghost.hit) {
+        hitter = ghost;
+      }
+    });
+
+    return hitter;
+  };
+  var resetObjects = function resetObjects() {
+    [blinky, pinky, clyde, inky, pacman].forEach(function (char) {
+      char.x = char.startingX;
+      char.y = char.startingY;
+    });
+  };
+
+  var flipPower = function flipPower(bool) {
+    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    powerMode = bool;
+    args.forEach(function (ghost) {
+      ghost.powerMode = bool;
+    });
+  };
+
+  var playGame = function playGame() {
+    if (powerMode) {
+      if (!s.powerSound.isPlaying()) {
+        s.powerSound.play();
+      }
+    }
+    s.background(51);
+    time = s.millis() / 1000;
+    if (time - powerStartTime > 12) {
+      flipPower(false, inky, pinky, blinky, clyde);
+    }
+    pacman = pacman.movePacman(pacDx, pacDy, grid);
+
+    inky = inky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    pinky = pinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    blinky = blinky.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    clyde = clyde.move(pacman.x, pacman.y, grid, time % 20, powerMode);
+    var onATile = pacman.x % 1 === 0 & pacman.y % 1 === 0;
+    var thisTile = grid[pacman.x + pacman.y * 28];
+    if (onATile && thisTile.type === "PELLET") {
+      thisTile.type = "OPEN";
+      score += 100;
+      if (s.musicBool) {
+        if (s.PacManEat.isPlaying()) {
+          s.PacManEat.stop();
+        }
+        s.PacManEat.play();
+      }
+      pellets--;
+    } else if (onATile && thisTile.type === "POWER") {
+      thisTile.type = "OPEN";
+      pellets--;
+      flipPower(true, inky, pinky, blinky, clyde);
+      powerStartTime = s.millis() / 1000;
+    }
+
+    hitter = checkHit(inky, blinky, pinky, clyde);
+    if (powerMode && hitter && hitter.powerMode) {
+      score += 500;
+      if (s.musicBool) {
+        if (s.eatGhost.isPlaying()) {
+          s.eatGhost.stop();
+        }
+        s.eatGhost.play();
+      }
+      hitter.x = hitter.startingX;
+      hitter.y = hitter.startingY;
+      hitter.powerMode = false;
+      hitter.hit = false;
+      hitter = null;
+    } else if (hitter) {
+      if (s.musicBool) {
+        s.death.play();
+      }
+      hitter.hit = false;
+      hitter = null;
+      flipPower(false, inky, blinky, pinky, clyde);
+      lives--;
+      s.reset();
+    }
+
+    for (var _i = 0; _i < grid.length; _i++) {
+      if (!characterIndex.includes(_i)) {
+        grid[_i].draw();
+      }
+    }
+
+    //draw characters last
+
+    for (var i = 0; i < characterIndex.length; i++) {
+      grid[characterIndex[i]].draw(s.frameCount % 8, powerMode);
+    }
+
+    s.text('' + score, 100, 580);
+    for (var i = 0; i < lives; i++) {
+      s.image(s.liveImage, i * 40 + 350, 550, 30, 30);
+    }
+  };
+
+  var gameWon = function gameWon() {
+    if (pellets === 0) {
+      won = true;
+      nextLevel = true;
+    } else if (lives === 0) {
+      loss = true;
+      nextLevel = false;
+    }
+  };
+  var drawSplash = function drawSplash() {
+    s.arc(100, 500, 80, 80, .25 * s.PI, 1.75 * s.PI, s.PIE);
+    s.image(s.inkyImage, 200, 460, 80, 80);
+    s.image(s.pinkyImage, 250, 460, 80, 80);
+    s.image(s.blinkyImage, 300, 460, 80, 80);
+    s.image(s.clydeImage, 350, 460, 80, 80);
+  };
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Tile = function () {
+  function Tile(s, x, y, type) {
+    _classCallCheck(this, Tile);
+
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.s = s;
+
+    this.DIMENSION = 17;
+  }
+
+  _createClass(Tile, [{
+    key: "draw",
+    value: function draw() {
+      switch (this.type) {
+        case "WALL":
+          this.s.noStroke();
+          this.s.fill('#022866');
+          this.s.rect(this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
+          break;
+        case "PELLET":
+          this.s.ellipseMode(this.s.CORNER);
+          this.s.noStroke();
+          this.s.fill(255);
+          this.s.ellipse(this.x * this.DIMENSION + this.DIMENSION / 3, this.y * this.DIMENSION + this.DIMENSION / 3, this.DIMENSION / 3);
+          break;
+        case "OPEN":
+          this.s.fill(255);
+          this.s.noStroke();
+          break;
+        case "POWER":
+          this.s.ellipseMode(this.s.CORNER);
+          this.s.noStroke();
+          this.s.fill('#FFFF00');
+          this.s.ellipse(this.x * this.DIMENSION + this.DIMENSION / 4, this.y * this.DIMENSION + this.DIMENSION / 4, this.DIMENSION / 2);
+          break;
+        case "GATE":
+          this.s.noStroke();
+          this.s.fill('#FFFFFF');
+          this.s.rect(this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION / 3);
+          break;
+        default:
+          this.s.stroke(0);
+          break;
+      }
+    }
+  }], [{
+    key: "parseType",
+    value: function parseType(numType) {
+      switch (numType) {
+        case "0":
+          return "WALL";
+          break;
+        case "1":
+          return "PELLET";
+          break;
+        case "2":
+          return "PACMAN";
+          break;
+        case "3":
+          return "INKY";
+          break;
+        case "4":
+          return "BLINKY";
+          break;
+        case "5":
+          return "PINKY";
+          break;
+        case "6":
+          return "CLYDE";
+          break;
+        case "7":
+          return "OPEN";
+          break;
+        case "8":
+          return "POWER";
+          break;
+        case "9":
+          return "GATE";
+          break;
+        default:
+          return "DEFAULT";
+      }
+    }
+  }]);
+
+  return Tile;
+}();
+
+exports.default = Tile;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = gridMap;
+function gridMap() {
+  var GRID_MAP = [['0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 8 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 8 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 1 0'], ['0 1 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 1 0'], ['0 1 1 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 1 1 0'], ['0 0 0 0 0 0 1 0 0 0 0 0 7 0 0 7 0 0 0 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 0 0 0 7 0 0 7 0 0 0 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 7 7 7 7 7 7 7 7 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 9 9 9 9 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 3 4 5 6 0 0 7 0 0 1 0 0 0 0 0 0'], ['7 7 7 7 7 7 1 7 7 7 0 0 0 0 0 0 0 0 7 7 7 1 7 7 7 7 7 7'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 0 0 0 0 0 1 0 0 7 0 0 0 0 0 0 0 0 7 0 0 1 0 0 0 0 0 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0'], ['0 8 1 1 0 0 1 1 1 1 1 1 1 7 2 1 1 1 1 1 1 1 0 0 1 1 8 0'], ['0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0'], ['0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0'], ['0 1 1 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 0 0 1 1 1 1 1 1 0'], ['0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0'], ['0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0'], ['0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0'], ['0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0']];
+
+  return GRID_MAP;
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Pacman = function () {
+  function Pacman(s, x, y, type) {
+    _classCallCheck(this, Pacman);
+
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.s = s;
+    this.direction = [1, 0];
+    this.pacTopLip = .25;
+    this.pacBottomLip = 1.75;
+    this.speed = 0.1;
+    this.DIMENSION = 17;
+  }
+
+  _createClass(Pacman, [{
+    key: "draw",
+    value: function draw(frameCount) {
+      var pacBottomLip = void 0;
+      var pacTopLip = void 0;
+
+      if (this.direction[0] === 1) {
+        pacBottomLip = 1.75;
+        pacTopLip = .25;
+      } else if (this.direction[0] === -1) {
+        pacBottomLip = .70;
+        pacTopLip = 1.25;
+      }
+      this.s.noStroke();
+      this.s.fill('#FFFF00');
+      if (frameCount <= 4) {
+        this.s.arc(this.x * this.DIMENSION + 2, this.y * this.DIMENSION + 2, 14, 14, (this.pacTopLip - .0625 * frameCount) * this.s.PI, (this.pacBottomLip + .0625 * frameCount) * this.s.PI, this.s.PIE);
+      } else {
+        this.s.arc(this.x * this.DIMENSION + 2, this.y * this.DIMENSION + 2, 14, 14, (this.pacTopLip - .25 + .0625 * (frameCount % 4)) * this.s.PI, (this.pacBottomLip + .25 - .0625 * (frameCount % 4)) * this.s.PI, this.s.PIE);
+      }
+    }
+  }, {
+    key: "movePacman",
+    value: function movePacman(dx, dy, grid) {
+      var newDirection = [dx, dy];
+
+      var target = grid[this.x + this.y * 28 + dx + dy * 28];
+      var oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28];
+
+      var wall = function wall(type) {
+        return ["WALL", "GATE"].includes(type);
+      };
+      if (this.x % 1 === 0 && this.y % 1 === 0) {
+        if (target && !wall(target.type)) {
+          this.direction = newDirection;
+        } else if (target && wall(target.type) && !wall(oldTarget.type)) {
+          this.direction;
+        } else if (target && wall(target.type)) {
+          this.direction = [0, 0];
+        }
+      }
+
+      if (this.direction[0] === 1) {
+        this.x = this.x + this.speed;
+        if (this.x === 27 && this.y === 14) {
+          this.x = 0;
+        }
+        this.pacBottomLip = 1.75;
+        this.pacTopLip = .25;
+      } else if (this.direction[0] === -1) {
+        this.pacBottomLip = .70;
+        this.pacTopLip = 1.25;
+        this.x = this.x - this.speed;
+        if (this.x === 0 && this.y === 14) {
+          this.x = 27;
+        }
+      } else if (this.direction[1] === 1) {
+        this.pacBottomLip = .25;
+        this.pacTopLip = .75;
+        this.y = this.y + this.speed;
+      } else if (this.direction[1] === -1) {
+        this.pacBottomLip = 1.20;
+        this.pacTopLip = 1.75;
+        this.y = this.y - this.speed;
+      }
+      this.x = Math.round(this.x * 10) / 10;
+      this.y = Math.round(this.y * 10) / 10;
+      return this;
+    }
+  }]);
+
+  return Pacman;
+}();
+
+exports.default = Pacman;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Ghost = function () {
+  function Ghost(s, x, y, type, cornerX, cornerY) {
+    _classCallCheck(this, Ghost);
+
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.s = s;
+    this.path;
+    this.cornerX = cornerX;
+    this.cornerY = cornerY;
+    this.direction = [1, 0];
+    this.moving = false;
+    this.begin = true;
+    this.speed = 0.1;
+    this.DIMENSION = 17;
+    this.hit = false;
+    this.powerMode = false;
+  }
+
+  _createClass(Ghost, [{
+    key: "draw",
+    value: function draw(frameCount) {
+
+      switch (this.type) {
+        case "INKY":
+          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.inkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
+          break;
+        case "PINKY":
+          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.pinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
+          break;
+        case "BLINKY":
+          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.blinkyImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
+          break;
+        case "CLYDE":
+          this.s.image(this.powerMode ? this.s.powerGhostImage : this.s.clydeImage, this.x * this.DIMENSION, this.y * this.DIMENSION, this.DIMENSION, this.DIMENSION);
+          break;
+      }
+    }
+  }, {
+    key: "move",
+    value: function move(pacX, pacY, grid, time, powerMode) {
+      var _this = this;
+
+      var possibleDirections = [[1, 0], [0, -1], [-1, 0], [0, 1]];
+      if ([1, -1].includes(this.direction[0])) {
+        possibleDirections = [[0, -1], [0, 1]];
+      } else if ([1, -1].includes(this.direction[1])) {
+        possibleDirections = [[1, 0], [-1, 0]];
+      }
+      var newDirection = possibleDirections[Math.floor(Math.random() * possibleDirections.length)];
+      var dirSum = 10000;
+
+      var goToX = time > 3 ? pacX : this.cornerX;
+      var goToY = time > 3 ? pacY : this.cornerY;
+
+      if (!this.powerMode) {
+        possibleDirections.forEach(function (dir) {
+          var posSum = void 0;
+          posSum = Math.sqrt((_this.x + dir[0] - goToX) ** 2 + (_this.y + dir[1] - goToY) ** 2);
+          if (posSum < dirSum && _this.moving !== false) {
+            dirSum = posSum;
+            newDirection = dir;
+          }
+        });
+      }
+      if (this.x <= pacX + .15 && this.x >= pacX - .15 && this.y <= pacY + .15 && this.y >= pacY - .15) {
+        this.hit = true;
+      }
+      if (this.x % 1 === 0 && this.y % 1 === 0) {
+        var target = grid[this.x + this.y * 28 + newDirection[0] + newDirection[1] * 28];
+        var oldTarget = grid[this.x + this.y * 28 + this.direction[0] + this.direction[1] * 28];
+
+        if (target && target.type !== "WALL") {
+          this.direction = newDirection;
+        } else if (target && target.type === "WALL" && oldTarget.type !== "WALL") {
+          this.direction;
+        } else if (target && target.type === "WALL") {
+          this.direction = [0, 0];
+          this.moving = false;
+          this.path = 'stop';
+        }
+      }
+
+      if (this.direction[0] === 1) {
+        if (this.x === 27 && this.y === 14) {
+          this.x = 0;
+        }
+        this.path = 'right';
+        this.x = this.x + this.speed;
+        this.moving = true;
+      } else if (this.direction[0] === -1) {
+        this.path = 'left';
+        this.x = this.x - this.speed;
+        if (this.x === 0 && this.y === 14) {
+          this.x = 27;
+        }
+        this.moving = true;
+      } else if (this.direction[1] === 1) {
+        this.y = this.y + this.speed;
+        this.moving = true;
+        this.path = 'up';
+      } else if (this.direction[1] === -1) {
+        this.y = this.y - this.speed;
+        this.moving = true;
+        this.path = 'down';
+      }
+      this.x = Math.round(this.x * 10) / 10;
+      this.y = Math.round(this.y * 10) / 10;
+      return this;
+    }
+  }]);
+
+  return Ghost;
+}();
+
+exports.default = Ghost;
 
 /***/ })
 /******/ ]);

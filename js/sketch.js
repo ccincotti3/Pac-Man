@@ -35,6 +35,9 @@ export default function sketch(s, music) {
   let level = 0;
   let text;
   let username;
+  let database = firebase.database().ref("scores");
+  let writeToDatabase = false;
+  let scoreBoard = [];
 
   s.preload = () => {
     s.inkyImage = s.loadImage('./assets/Inky.png');
@@ -80,10 +83,21 @@ export default function sketch(s, music) {
     grid = createGrid();
     s.textFont(s.myFont);
     s.textSize(48);
-    text = s.createInput("username");
-    text.parent('center-container');
-    text.position(138, 270);
+    if(start) {
+      text = s.createInput("username");
+      text.parent('center-container');
+      text.position(138, 270);
+      scoreBoard = [];
+      database.orderByChild("score").limitToLast(5).once("value", (snapshot) => {
+        snapshot.forEach(snap => {
+          scoreBoard.push([snap.val().username, snap.val().score])
+        })
+        scoreBoard = scoreBoard.reverse();
+      })
+    }
+    writeToDatabase = false;
     s.reset();
+
   }
 
   s.reset = () => {
@@ -104,15 +118,28 @@ export default function sketch(s, music) {
       s.text(`TO PLAY`, canvasX / 2, 400);
     } else if(pause) {
       s.clear();
+      s.textSize(48)
       s.text(`PAUSE`, canvasX / 2, 250);
+      for (var i = 0; i < scoreBoard.length; i++) {
+        s.textSize(16)
+        s.text(`${scoreBoard[i][0]}: ${scoreBoard[i][1]}`, canvasX / 2, i * 20 + 300)
+      }
     } else if(won || loss) {
+      s.textSize(48)
       let text = won ? 'YOU WIN!' : "YOU LOSE!"
       let nextText = won ? 'NEXT LEVEL!' : 'NEW GAME!'
       s.text(`${text}`, canvasX / 2, 250);
       s.text(`PRESS 'N'`, canvasX / 2, 300);
       s.text(`FOR`, canvasX / 2, 350);
       s.text(`${nextText}`, canvasX / 2, 400);
+      if (loss && !writeToDatabase) {
+        database.push({
+          username: username, score: score
+          });
+        writeToDatabase = true;
+      }
     } else if(nextLevel) {
+      s.textSize(48)
       s.clear();
       startTime === 0 ? startTime = s.millis() / 1000: ''
       time = s.millis() / 1000
