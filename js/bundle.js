@@ -47149,7 +47149,7 @@ function sketch(s, music) {
     for (var i = 0; i < characterIndex.length; i++) {
       grid[characterIndex[i]].draw(s.frameCount % 8, powerMode);
     }
-
+    s.textSize(48);
     s.text('' + score, 100, 580);
     for (var i = 0; i < lives; i++) {
       s.image(s.liveImage, i * 40 + 350, 550, 30, 30);
