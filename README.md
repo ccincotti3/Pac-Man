@@ -1,6 +1,6 @@
 ## Pac-Man
 
-[Play here](http://www.ccincotti3.github.io/Pac-Man/)
+[Play here](https://www.ccincotti3.github.io/Pac-Man/)
 
 ![main](docs/pacman-play.png)
 
