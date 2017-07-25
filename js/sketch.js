@@ -52,6 +52,7 @@ export default function sketch(s, music) {
     s.death = s.loadSound('assets/pacman_death.wav');
     s.powerSound = s.loadSound('assets/ghostblue.m4a');
     s.ghostMove = s.loadSound('assets/ghostmove.m4a');
+    s.introSound = s.loadSound('assets/intro.m4a');
     let musicCheckbox = $( "#music" ).change(
     function(){
       s.musicBool = musicCheckbox[0].checked
@@ -140,6 +141,7 @@ export default function sketch(s, music) {
         writeToDatabase = true;
       }
     } else if(nextLevel) {
+      s.introSound.play()
       s.textSize(48)
       s.clear();
       startTime === 0 ? startTime = s.millis() / 1000: ''
