@@ -50,7 +50,7 @@ export default function sketch(s, music) {
     s.PacManEat = s.loadSound('assets/pacman_chomp.mp3');
     s.eatGhost = s.loadSound('assets/pacman_eatghost.wav');
     s.death = s.loadSound('assets/pacman_death.wav');
-    s.powerSound = s.loadSound('assets/power.mp3');
+    s.powerSound = s.loadSound('assets/ghostblue.m4a');
     let musicCheckbox = $( "#music" ).change(
     function(){
       s.musicBool = musicCheckbox[0].checked
