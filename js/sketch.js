@@ -266,14 +266,17 @@ export default function sketch(s, music) {
   }
 
   const playGame =() => {
-    if (powerMode) {
+    if (!s.musicBool) {
       s.ghostMove.stop()
-      if(!s.powerSound.isPlaying() && s.musicBool) {
+      s.powerSound.stop()
+    } else if (powerMode) {
+      s.ghostMove.stop()
+      if(!s.powerSound.isPlaying()) {
         s.powerSound.loop()
       }
     } else {
       s.powerSound.stop()
-      if (!s.ghostMove.isPlaying() && s.musicBool) {
+      if (!s.ghostMove.isPlaying()) {
         s.ghostMove.loop()
       }
     }
