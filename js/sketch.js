@@ -141,7 +141,9 @@ export default function sketch(s, music) {
         writeToDatabase = true;
       }
     } else if(nextLevel) {
-      s.introSound.play()
+      if(!s.introSound.isPlaying() && s.musicBool) {
+        s.introSound.play()
+      }
       s.textSize(48)
       s.clear();
       startTime === 0 ? startTime = s.millis() / 1000: ''
