@@ -1,26 +1,17 @@
-var path = require("path");
+var debug = process.env.NODE_ENV !== "production";
+var webpack = require('webpack');
 
 module.exports = {
   context: __dirname,
+  devtool: debug ? "inline-sourcemap" : null,
   entry: "./js/entry.js",
   output: {
-    path: path.resolve(__dirname, 'js'),
+    path: __dirname + "/js",
     filename: "bundle.js"
   },
-  module: {
-    loaders: [
-      {
-        test: [/\.jsx?$/, /\.js?$/],
-        exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015']
-        }
-      }
-    ]
-  },
-  devtool: 'source-maps',
-  resolve: {
-    extensions: [".js", "*"]
-  }
+  plugins: debug ? [] : [
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+  ],
 };
