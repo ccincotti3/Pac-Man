@@ -119,6 +119,8 @@ export default function sketch(s, music) {
       s.text(`PRESS ENTER`, canvasX / 2, 350);
       s.text(`TO PLAY`, canvasX / 2, 400);
     } else if(pause) {
+      s.ghostMove.stop()
+      s.powerSound.stop()
       s.clear();
       s.textSize(48)
       s.text(`PAUSE`, canvasX / 2, 250);
