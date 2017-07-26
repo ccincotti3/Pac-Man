@@ -272,7 +272,7 @@ export default function sketch(s, music) {
     } else {
       s.powerSound.stop()
       if (!s.ghostMove.isPlaying() && s.musicBool) {
-        s.ghostMove.loop()
+        s.ghostMove.play()
       }
     }
     s.background(51);
